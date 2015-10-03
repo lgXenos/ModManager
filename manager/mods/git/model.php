@@ -26,10 +26,10 @@ class gitActionModel {
 		$branches = $this->getBranches();
 		$lastChanges = $this->getStatus();
 
-		return [
+		return array(
 			'branches' => $branches,
 			'status' => $lastChanges,
-		];
+		);
 	}
 	
 	public function makeCommit(){
@@ -42,7 +42,7 @@ class gitActionModel {
 	 * @return boolean
 	 */
 	private function getBranches() {
-		$ret = [];
+		$ret = array();
 
 		$locals = explode("\n", $this->fetchGitCommand('git branch -l'));
 		foreach ($locals as $ficha) {
@@ -84,7 +84,7 @@ class gitActionModel {
 	 * @return type
 	 */
 	private function getStatus() {
-		$ret = [];
+		$ret = array();
 		$status = explode("\n", $this->fetchGitCommand('git status -s --no-column'));
 		foreach ($status as $file) {
 			$ret[] = $file;

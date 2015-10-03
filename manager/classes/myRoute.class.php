@@ -15,7 +15,7 @@ class myRoute {
 	 */
 	public static function getRoute($action, $_do = false, $params = false) {
 		//$ret['action'] = $action;
-		$ret = [];
+		$ret = array();
 
 		$_do ? $ret['_do'] = $_do : '';
 

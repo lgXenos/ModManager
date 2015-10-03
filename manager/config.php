@@ -12,11 +12,11 @@ function my_autoload($pClassName) {
 
 spl_autoload_register("my_autoload");
 
-$cfg = [
+$cfg = array(
 	// fullPath set in getInstance
 	'webPath' => '/manager',
 	'modsPath' => FLS_DIR . '/mods'
-];
+);
 
 // init myConfig
 try {

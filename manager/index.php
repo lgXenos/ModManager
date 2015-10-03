@@ -22,10 +22,10 @@ if ($action == '') {
 	}
 	$out .='</ul>';
 
-	$includes = [
+	$includes = array(
 		//['type' => 'css', 'link' => myConfig::get('webPath').'/res/css/main.css'],
 		//['type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')],
-	];
+	);
 	myOutput::outFullHtml($out, 'Manager of Mods', $includes);
 
 	exit;

@@ -43,13 +43,13 @@ class gitActionView {
 				$html .= '
 					<tr>
 						<td>
-							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', ['alias' => $_i, 'type' => 'branch-D']) . '">X</a> 
+							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', array('alias' => $_i, 'type' => 'branch-D')) . '">X</a> 
 								|
 							' . $local . '
 						</td>
 						<td width="70px">&nbsp;</td>
 						<td>
-							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', ['alias' => $_i, 'type' => 'push:']) . '">X</a> 
+							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', array('alias' => $_i, 'type' => 'push:')) . '">X</a> 
 								|
 							' . $remote . '
 						</td>
@@ -88,10 +88,10 @@ class gitActionView {
 
 		}
 
-		$includes = [
-			['type' => 'css', 'link' => myRoute::getRoute('git', 'renderCSS')],
-			['type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')],
-		];
+		$includes = array(
+			array('type' => 'css', 'link' => myRoute::getRoute('git', 'renderCSS')),
+			array('type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')),
+		);
 		myOutput::outFullHtml($html, 'MyGit / RomanSh', $includes);
 	}
 

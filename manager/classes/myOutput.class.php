@@ -17,13 +17,13 @@ class myOutput {
 	}
 
 	public static function jsonSuccess($data) {
-		self::json(['success' => $data]);
+		self::json(array('success' => $data));
 	}
 
 	public static function jsonError($message = 'unknown error', $id = -1) {
-		self::json([
-			'error' => ['message' => $message, 'id' => $id]
-		]);
+		self::json(array(
+			'error' => array('message' => $message, 'id' => $id)
+		));
 	}
 
 	/**
@@ -65,7 +65,7 @@ class myOutput {
 	public static function getFooter($includes = false) {
 
 		$addScripts = '';
-		is_array($includes) ? '' : $includes = [];
+		is_array($includes) ? '' : $includes = array();
 
 		foreach ($includes as $inc) {
 			$link = $inc['link'];
