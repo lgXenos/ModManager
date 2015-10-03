@@ -1,0 +1,35 @@
+a{
+	color: #164277;
+}
+body{
+	font-family: Helvetica;
+	color:#3E3D3D;
+}
+.currFicha {
+	font-size:30px;
+}
+.showOnHover{
+	opacity:0.1;
+}
+td:hover .showOnHover{
+	opacity:1;
+}
+.spacer{
+	padding-bottom: 10px; 
+	padding-top: 10px; 
+	margin-bottom:10px; 
+	border-bottom:1px solid gray;
+}
+.button{
+	padding: 5px 7px;
+	background-color: #526AD6;
+	color: white;
+	text-decoration: none;
+	border-radius: 6px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: white grey grey white;
+}
+.button:hover{
+	border-color: grey grey grey grey;
+}

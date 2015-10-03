@@ -1,0 +1,15 @@
+AddDefaultCharset utf-8
+Options -Indexes
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^.htaccess$ - [F]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /manager/index.php [L]
+
+php_value upload_max_filesize 30M
+php_value post_max_size 30M
+php_value max_execution_time 60
+php_value max_input_time 200000
