@@ -72,6 +72,7 @@ class myRoute {
 		
 		// отдаем action
 		$action = myRoute::getRequest('action', 'str', '');
+		myCore::$currentAction = $action;
 		
 		return $action;
 	}

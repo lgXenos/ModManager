@@ -20,9 +20,11 @@ $cfg = array(
 
 // init myConfig
 try {
-	myConfig::getInstance(FLS_DIR); // set fullPath
+	// set fullPath
+	myConfig::getInstance(FLS_DIR);
 	myConfig::set($cfg);
-	// var_dump(myConfig::getAllConfig());
+	// set "action", init core
+	myCore::getInstance();
 } catch (Exception $e) {
 	exit('Config is broken. Halted');
 }

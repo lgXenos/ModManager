@@ -88,65 +88,9 @@ class gitActionView {
 
 		}
 
-		$includes = array(
-			array('type' => 'css', 'link' => myRoute::getRoute('git', 'renderCSS')),
-			array('type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')),
-		);
-		myOutput::outFullHtml($html, 'MyGit / RomanSh', $includes);
-	}
-
-	/**
-	 * вывод css для гита
-	 * 
-	 * @param type $res
-	 */
-	public function renderCSS() {
-		header("Content-type: text/css", true);
-		myOutput::out('
-			.mainTable{
-			}
-			.mainTable td{
-				border-bottom:1px solid #D8D4D4;
-			}
-			.mainTable td .button{
-				padding: 0px 4px;
-			}'
-		);
-	}
-
-	public function renderJS() {
-		header("Content-type: text/javascript", true);
-		myOutput::out('
-			$(document).ready(function () {
-				$(document)
-					.on("click", ".js_git_commit", function(){
-						var ansv = prompt("input comment to commit -am \'your_comment\':","autoCommit");
-						if(ansv){
-							var url = "' . myRoute::getRoute('git', 'commit') . '";
-							_aj(url, {text:ansv}, viewConsoleAnswer);
-						}
-						return false;
-					})
-					
-				function _aj(url, data, fn, type) {
-					$.ajax({
-						type: "POST",
-						url: url,
-						data: data,
-						dataType: "json",
-						timeout: 15000,
-						success: function (result) {
-							if (typeof (fn) == \'function\')
-								fn(result);
-						}
-					})
-				}
-				
-				function viewConsoleAnswer(ret){
-					console.log(ret);
-				}
-			})
-		');
+		myOutput::addCSS('main.css');
+		myOutput::addJS('main.js');
+		myOutput::outFullHtml($html, 'MyGit / RomanSh');
 	}
 
 }

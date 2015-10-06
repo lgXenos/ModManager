@@ -5,6 +5,8 @@
  */
 class myOutput {
 
+	private static $includes = array();
+
 	/**
 	 * отдает JSON
 	 * 
@@ -37,18 +39,67 @@ class myOutput {
 		return true;
 	}
 
-	public static function outFullHtml($html, $title = false, $includes = false) {
+	public static function addCSS($fileName) {
+		$webPath = self::getWebPathToModResources() . 'css/';
+		$filePath = $webPath . $fileName;
+		$item = array('type' => 'css', 'file' => $filePath);
+		self::$includes[$filePath] = $item;
+	}
+
+	public static function addJS($fileName) {
+		$webPath = self::getWebPathToModResources() . 'js/';
+		$filePath = $webPath . $fileName;
+		$item = array('type' => 'js', 'file' => $filePath);
+		self::$includes[$filePath] = $item;
+	}
+
+	public static function getAllIncludes() {
+		return self::$includes;
+	}
+
+	/**
+	 * получем путь к ресурсам текущего модуля
+	 * 
+	 * @param type $modName
+	 * @return string
+	 */
+	public static function getWebPathToModResources($modName = false) {
+		$modName = !$modName ? myCore::$currentAction : $modName;
+		$webPath = myConfig::get('webPath');
+		$path = $webPath . '/mods/' . $modName . '/res/';
+
+		return $path;
+	}
+
+	/**
+	 * инициализация вывода полной страницы
+	 * 
+	 * @param type $html
+	 * @param type $title
+	 * @return boolean
+	 */
+	public static function outFullHtml($html, $title = false) {
 		echo
-		self::getHeader($title, $includes) .
+		self::getHeader($title) .
 		$html .
-		self::getFooter($includes)
+		self::getFooter()
 		;
 		return true;
 	}
 
+	/**
+	 * вывод заголовка
+	 * 
+	 * @param type $title
+	 * @return type
+	 */
 	public static function getHeader($title = false) {
 
 		$title = $title ? $title : 'MyTitle / RomanSh';
+		
+		if(myCore::$currentAction != ''){
+			// подключим некоме меню на внутренних страницах
+		}
 
 		return '
 			<!DOCTYPE html>
@@ -56,19 +107,27 @@ class myOutput {
 				<head>
 					<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 					<title>' . $title . '</title>
-					<link type="text/css" rel="stylesheet" href="' . myConfig::get('webPath').'/res/css/main.css' . '">
+					<link type="text/css" rel="stylesheet" href="' . myConfig::get('webPath') . '/res/css/main.css' . '">
 				</head>
 				<body>
 		';
 	}
 
-	public static function getFooter($includes = false) {
+	/**
+	 * вывод футера
+	 * 
+	 * @return string
+	 */
+	public static function getFooter() {
 
 		$addScripts = '';
+
+		$includes = self::getAllIncludes();
+
 		is_array($includes) ? '' : $includes = array();
 
 		foreach ($includes as $inc) {
-			$link = $inc['link'];
+			$link = $inc['file'];
 			if ($inc['type'] == 'css') {
 				$addScripts .= '<link type="text/css" rel="stylesheet" href="' . $link . '">';
 			} elseif ($inc['type'] == 'js') {
@@ -79,11 +138,11 @@ class myOutput {
 		return '
 					<!-- footer/ -->
 					<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+					<script type="text/javascript">moduleUrl = "' . myRoute::getRoute(myCore::$currentAction) . '";</script>
 					' . $addScripts . '
 				</body>
 			</html>
 		';
 	}
-
 
 }

@@ -3,6 +3,7 @@
 class myCore {
 
 	private static $instance = false;
+	public static $currentAction = '';
 
 	/**
 	 * singleton
@@ -12,6 +13,7 @@ class myCore {
 	public static function getInstance() {
 		if (!(self::$instance instanceof self)) {
 			self::$instance = new self;
+			self::$currentAction = myRoute::getActionAndParseCurrentURI();
 		}
 
 		return self::$instance;
@@ -22,7 +24,7 @@ class myCore {
 	 * 
 	 * @return type 
 	 */
-	public static function getRequiredListComponentsForMod(){
+	public static function getRequiredListComponentsForMod() {
 		return array('controller.php', 'model.php', 'view.php');
 	}
 
@@ -50,16 +52,16 @@ class myCore {
 	 * @return boolean
 	 */
 	public static function validateMod($fullModPath) {
-		
+
 		$isValid = true;
-		foreach (myCore::getRequiredListComponentsForMod() as $component) {
+		foreach (self::getRequiredListComponentsForMod() as $component) {
 			$checkingFile = $fullModPath . '/' . $component;
 			if (!file_exists($checkingFile)) {
 				$isValid = false;
 				break;
 			}
 		}
-		
+
 		return $isValid;
 	}
 
@@ -82,7 +84,7 @@ class myCore {
 		$title = $entry;
 
 		// считывание конфига для мода + его тайтла
-		$iniArray = $readIniFile ? myCore::readModIniFile($fullModPath) : false;
+		$iniArray = $readIniFile ? self::readModIniFile($fullModPath) : false;
 		if (is_array($iniArray) && isset($iniArray['info']['title'])) {
 			$title = $iniArray['info']['title'];
 		}
@@ -93,7 +95,7 @@ class myCore {
 			'ini' => $iniArray,
 			'title' => $title,
 			'name' => $entry,
-			'isValid' => myCore::validateMod($fullModPath)
+			'isValid' => self::validateMod($fullModPath)
 		);
 	}
 
@@ -116,7 +118,7 @@ class myCore {
 					(!$modName) ||
 					($modName && $entry == $modName)
 			) {
-				myCore::getModInfo($ret, $entry, $readIniFile);
+				self::getModInfo($ret, $entry, $readIniFile);
 			}
 		}
 
@@ -132,12 +134,12 @@ class myCore {
 	public static function tryIncludeMod($modName) {
 
 		$ret = array();
-		myCore::getModInfo($ret, $modName);
-		
+		self::getModInfo($ret, $modName);
+
 		if (isset($ret[$modName]) && $ret[$modName]['isValid']) {
 
 			// подключаем стандартные компоненты приложения
-			foreach (myCore::getRequiredListComponentsForMod() as $component) {
+			foreach (self::getRequiredListComponentsForMod() as $component) {
 				include_once $ret[$modName]['path'] . '/' . $component;
 			}
 
@@ -146,10 +148,11 @@ class myCore {
 			return false;
 		}
 	}
-	
-	public static function render404(){
+
+	public static function render404() {
 		header("HTTP/1.0 404 Not Found");
 		myOutput::out('<h1>Page not found</h1><h3>Server response code 404</h3>');
+		myOutput::out('<h3><a href="/">To Home /</a></h3>');
 		exit();
 	}
 

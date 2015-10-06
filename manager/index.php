@@ -1,12 +1,32 @@
 <?php
 
+// config + init
 include_once './config.php';
 
-$action = myRoute::getActionAndParseCurrentURI();
+$action = myCore::$currentAction;
 
-//print_r(  );
 // если главная 
 if ($action == '') {
+	applyIndexLogic();
+}
+
+// подключаем mod 
+if (myCore::tryIncludeMod($action)) {
+	$className = $action . 'ActionController';
+	new $className;
+	exit;
+}
+
+// если ничего не найдено - отваливаемся с 404
+myCore::render404();
+
+/**
+ * 
+ * 
+ * 
+ * рендерим все, что относится к главной
+ */
+function applyIndexLogic() {
 	$modList = myCore::getModsList(false, true);
 
 	$out = '<ul>';
@@ -23,19 +43,10 @@ if ($action == '') {
 	$out .='</ul>';
 
 	$includes = array(
-		//['type' => 'css', 'link' => myConfig::get('webPath').'/res/css/main.css'],
-		//['type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')],
+			//['type' => 'css', 'link' => myConfig::get('webPath').'/res/css/main.css'],
+			//['type' => 'js', 'link' => myRoute::getRoute('git', 'renderJS')],
 	);
 	myOutput::outFullHtml($out, 'Manager of Mods', $includes);
 
 	exit;
 }
-
-// подключаем mod 
-if (myCore::tryIncludeMod($action)) {
-	$className = $action . 'ActionController';
-	new $className;
-	exit;
-}
-
-myCore::render404();

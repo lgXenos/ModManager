@@ -46,9 +46,16 @@ class myConfig {
 	}
 
 	/**
+	 * получить переменную конфигурации
+	 * 
+	 * изначально доступны <br>
+	 * * fullPath <br>
+	 * * webPath <br>
+	 * * modsPath<br>
 	 * 
 	 * @param type $name
 	 * @throws Exception
+	 * 
 	 */
 	public static function get($name) {
 
