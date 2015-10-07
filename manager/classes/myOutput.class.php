@@ -138,7 +138,7 @@ class myOutput {
 		return '
 					<!-- footer/ -->
 					<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-					<script type="text/javascript">moduleUrl = "' . myRoute::getRoute(myCore::$currentAction) . '";</script>
+					<script type="text/javascript">/*Global JS Vars*/var G = {}; G.moduleUrl = "' . myRoute::getRoute(myCore::$currentAction) . '";</script>
 					' . $addScripts . '
 				</body>
 			</html>

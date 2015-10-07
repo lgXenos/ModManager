@@ -32,8 +32,14 @@ class gitActionModel {
 		);
 	}
 	
+	/**
+	 * комитимся
+	 * 
+	 * @return type
+	 */
 	public function makeCommit(){
-		return true;
+		$res = $this->fetchGitCommand('git status');
+		return $res;
 	}
 
 	/**
@@ -44,7 +50,7 @@ class gitActionModel {
 	private function getBranches() {
 		$ret = array();
 
-		$locals = explode("\n", $this->fetchGitCommand('git branch -l'));
+		$locals = $this->fetchGitCommand('git branch -l');
 		foreach ($locals as $ficha) {
 
 			if (strpos($ficha, '*') === 0) {
@@ -62,7 +68,7 @@ class gitActionModel {
 
 			$ret[$ficha]['local'] = $num;
 		}
-		$remotes = explode("\n", $this->fetchGitCommand('git branch -r'));
+		$remotes = $this->fetchGitCommand('git branch -r');
 		foreach ($remotes as $ficha) {
 
 			$ficha = str_replace('origin/', '', $ficha);
@@ -85,7 +91,7 @@ class gitActionModel {
 	 */
 	private function getStatus() {
 		$ret = array();
-		$status = explode("\n", $this->fetchGitCommand('git status -s --no-column'));
+		$status = $this->fetchGitCommand('git status -s --no-column');
 		foreach ($status as $file) {
 			$ret[] = $file;
 		}
@@ -93,9 +99,21 @@ class gitActionModel {
 		return $ret;
 	}
 
-	private function fetchGitCommand($str) {
+	/**
+	 * 
+	 * @param type $str
+	 * @param type $explode - массив по умолчанию
+	 * 
+	 * @return array | string
+	 */
+	private function fetchGitCommand($str, $explode = true) {
 		$cd = 'cd ' . $this->gitDir . '; ';
-		return myConsole::fetchExec($cd . $str);
+		$res = myConsole::fetchExec($cd . $str);
+		if($explode){
+			$res = explode("\n", $res);
+		}
+		
+		return $res;
 	}
 
 }

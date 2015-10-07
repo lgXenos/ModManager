@@ -33,3 +33,7 @@ td:hover .showOnHover{
 .button:hover{
 	border-color: grey grey grey grey;
 }
+.scrollerXY{
+	overflow-y: auto;
+	overflow-x: auto;
+}

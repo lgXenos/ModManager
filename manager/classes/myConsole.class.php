@@ -9,7 +9,7 @@ class myConsole {
 	 * получить результат выполнения команды в консоли
 	 * 
 	 * @param type $command
-	 * @return type
+	 * @return string
 	 */
 	public static function fetchExec($command) {
 		ob_start();

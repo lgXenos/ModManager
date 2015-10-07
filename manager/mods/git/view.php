@@ -57,21 +57,32 @@ class gitActionView {
 				';
 			}
 
-			$currentHtml = '<i>cant parse name of current feature :(</i>';
+			$currentHtml = '<i>cant parse name of current branch :(</i>';
 			if ($current) {
 				$currentHtml = '
 					<a class="button" href="' . myRoute::getRoute('git', 'push') . '">push</a> |
 					<a class="button js_git_commit" href="#">commit</a> |
-					at feature: <strong>' . $current . '</strong>
+					on branch: <strong>' . $current . '</strong>
 				';
 			}
 
-			$status= '';
+			$_s = '';
 			foreach ($res['status'] as $_i => $_v) {
-				$status .= $_v . '<br>';
+				$_s .= $_v . '<br>';
 			}
-			$status = '<div class="spacer">git status -s --no-column</div>'
-					. '<div class="js_"></div>';
+			if($_s==''){
+				$_s = 'already up to date';
+			}
+			$status = '
+			<div class="spacer">
+				<div class="scrollerXY" style="max-height:150px;">
+					<div class="asConsole js_myConsole">
+						~$ git status -s --no-column<br>
+						'.$_s.'
+					</div>
+				</div>
+			</div>
+			';
             
 			$html = '
 				<div class="currFicha spacer">' . $currentHtml . '</div>
