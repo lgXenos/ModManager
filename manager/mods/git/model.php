@@ -12,7 +12,7 @@ class gitActionModel {
 		if (file_exists('/opt/var/www/instant')) {
 			$this->gitDir = '/opt/var/www/instant';
 		} else {
-			$this->gitDir = '/var/www/html';
+			$this->gitDir = '/var/www/mys';
 		}
 		
 		if(!$this->checkGitPHPAvailability()){
@@ -160,26 +160,21 @@ class gitActionModel {
 		// проверка на доступность 
 		// делаю через commit, т.к. более показательно
 		$status = $this->fetchGitCommand('git commit');
-		$isValid = false;
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
 		if( !count($status) ){
 			/**
 			 * @todo: взять с конфига модуля
 			 */
-			$this->fetchGitCommand('git config --global user.email "lgcrey@mail.ru"');
-			$this->fetchGitCommand('git config --global user.name "RomanSh"');
+			$this->fetchGitCommand('git config user.email "my@email.here"');
+			$this->fetchGitCommand('git config user.name "RomanSh"');
 			if($count<=0){
 				$this->checkGitPHPAvailability($count+1);
 			}
+			else {
+				return false;
+			}
 		}
-		var_dump($isValid);
 		
-		$this->fetchGitCommand('gitcommit');
-		$this->fetchGitCommand('gitcommit');
-		$this->fetchGitCommand('gitcommit');
-		
-		exit('asd');
-		
-		return $isValid;
+		return true;
 	}
 }
