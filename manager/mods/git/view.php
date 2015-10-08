@@ -75,9 +75,8 @@ class gitActionView {
 			}
 			$status = '
 			<div class="spacer">
-				<div class="scrollerXY" style="max-height:150px;">
+				<div class="scrollerXY" style="height:170px;">
 					<div class="asConsole js_myConsole">
-						~$ git status -s --no-column<br>
 						'.$_s.'
 					</div>
 				</div>

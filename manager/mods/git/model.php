@@ -6,13 +6,12 @@
 class gitActionModel {
 
 	public $gitDir = '.';
-	
+
 	// hard-coding
 	public function __construct() {
-		if(file_exists('/opt/var/www/instant')){
+		if (file_exists('/opt/var/www/instant')) {
 			$this->gitDir = '/opt/var/www/instant';
-		}
-		else {
+		} else {
 			$this->gitDir = '/var/www/html';
 		}
 	}
@@ -31,14 +30,16 @@ class gitActionModel {
 			'status' => $lastChanges,
 		);
 	}
-	
+
 	/**
 	 * комитимся
 	 * 
 	 * @return type
 	 */
-	public function makeCommit(){
-		$res = $this->fetchGitCommand('git status');
+	public function makeCommit($text) {
+		$res = array();
+		$this->appendFetchGitCommand($res, 'git commit -am "' . $text . '"', true);
+		$this->appendFetchGitCommand($res, 'git status', true);
 		return $res;
 	}
 
@@ -87,11 +88,13 @@ class gitActionModel {
 	/**
 	 * получить массив строчек от git status
 	 * 
+	 * @param type $withCommand - вернуть с выполненной командой
+	 * 
 	 * @return type
 	 */
-	private function getStatus() {
+	private function getStatus($withCommand = false) {
 		$ret = array();
-		$status = $this->fetchGitCommand('git status -s --no-column');
+		$status = $this->fetchGitCommand('git status -s --no-column', $withCommand);
 		foreach ($status as $file) {
 			$ret[] = $file;
 		}
@@ -102,18 +105,32 @@ class gitActionModel {
 	/**
 	 * 
 	 * @param type $str
-	 * @param type $explode - массив по умолчанию
+	 * @param type $withCommand - вернуть с выполненной командой
 	 * 
-	 * @return array | string
+	 * @return array
 	 */
-	private function fetchGitCommand($str, $explode = true) {
+	private function fetchGitCommand($str, $withCommand = false) {
 		$cd = 'cd ' . $this->gitDir . '; ';
 		$res = myConsole::fetchExec($cd . $str);
-		if($explode){
-			$res = explode("\n", $res);
+		$res = explode("\n", $res);
+		if ($withCommand) {
+			array_unshift($res, '', '~$ ' . $str);
 		}
-		
+
 		return $res;
+	}
+
+	/**
+	 * добавляет результат команды к переданному массиву
+	 * 
+	 * @param type $res
+	 * @param type $str
+	 * @param type $withCommand
+	 */
+	private function appendFetchGitCommand(&$res, $str, $withCommand = false) {
+		$ret = $this->fetchGitCommand($str, $withCommand);
+		;
+		$res = myTools::arraysUnionWithoutIndex($res, $ret);
 	}
 
 }

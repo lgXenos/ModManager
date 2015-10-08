@@ -49,7 +49,7 @@ class gitActionController {
 	 */
 	public function commit() {
 
-		$text = myRoute::getRequest('_do', 'str', 'text');
+		$text = myRoute::getRequest('text', 'str', 'text');
 		$gitM = new gitActionModel();
 
 		$res = $gitM->makeCommit($text);

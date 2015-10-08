@@ -1,34 +1,63 @@
 /* global G */
 
 var myGitMod = {
+	// где консолька
+	tplConsole: $('.js_myConsole'),
+	// ее размер
+	tplConsoleHeight: 170,
+	//
 	// инициализируем "приложение"
 	init: function () {
 		var self = this;
+		// фикс консольки
+		self.tplConsole.css({'min-height': self.tplConsoleHeight});
+		self.tplConsole.parent().css({height:self.tplConsoleHeight});
+		self._scroolConsoleToBottom();
+		// прослушки
 		self._binds();
 	},
 	// добавляем в "консоль" инфу
 	_appendConsoleAnswer: function (res) {
-		if(!res.success){
+		var self = this;
+
+		if (!res.success) {
 			res.success = ['ERROR$ ' + res.error.message];
 		}
-		
-		var tpl = $('<div>').css({display:'none'});
-		for(var _t in res.success){
-			var line = res.success[_t]+'';
-			line = line.replace(/</g,'&lt;');
-			line = line.replace(/>/g,'&gt;');
-			tpl.append(line + '<br>');
-		}
+
+		//var tpl = $('<div>');
+		var tpl = self.tplConsole;
+
 		var currDate = new Date;
 		currDate = '<b>' + currDate.toString() + '</b><br>'
-		tpl.append('<br class="hr">').prepend( currDate );
-		
-		$('.js_myConsole').prepend(tpl);
-		
-		setTimeout(function(){
-			tpl.show(500);
+		tpl.append('<p class="hr"></p>').append(currDate);
+
+		for (var _t in res.success) {
+			var line = res.success[_t] + '';
+			line = line.replace(/</g, '&lt;');
+			line = line.replace(/>/g, '&gt;');
+			// если это команда
+			if (line.indexOf('~$') == 0) {
+				line = '<b>' + line + '</b>';
+			}
+			tpl.append(line + '<br>');
+		}
+
+		//$('.js_myConsole').append(tpl);
+
+		// var e = $('.js_myConsole').parent(); e.animate({scrollTop: '0px' }, '500', 'swing');
+		setTimeout(function () {
+			self._scroolConsoleToBottom();
 		}, 0);
-		
+
+	},
+	// прокрутка окна консоли вниз
+	_scroolConsoleToBottom: function () {
+		var self = this;
+		var tpl = self.tplConsole;
+		var e = tpl.parent();
+		var scrollTo = tpl[0].offsetHeight;
+		e.animate({scrollTop: scrollTo}, '500', 'swing');
+
 	},
 	// слушатели
 	_binds: function () {

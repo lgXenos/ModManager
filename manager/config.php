@@ -7,7 +7,12 @@ ini_set("display_errors", 1);
 define('FLS_DIR', dirname(__FILE__));
 
 function my_autoload($pClassName) {
-	include(FLS_DIR . "/classes/" . $pClassName . ".class.php");
+	$filename = FLS_DIR . "/classes/" . $pClassName . ".class.php";
+	if(!file_exists($filename)){
+		// exit('Class <b>'.$pClassName.'</b> not found. Halted.');
+		exit('File <b>'.$filename.'</b> not found. Halted.');
+	}
+	require_once($filename);
 }
 
 spl_autoload_register("my_autoload");
