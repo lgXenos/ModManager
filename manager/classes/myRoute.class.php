@@ -66,9 +66,9 @@ class myRoute {
 		if(isset($uriParts[0])){
 			$_REQUEST['action'] = $uriParts[0];
 		}
-		if(isset($uriParts[1])){
-			$_REQUEST['_do'] = $uriParts[1];
-		}
+//		if(isset($uriParts[1])){
+//			$_REQUEST['_do'] = $uriParts[1];
+//		}
 		
 		// отдаем action
 		$action = myRoute::getRequest('action', 'str', '');

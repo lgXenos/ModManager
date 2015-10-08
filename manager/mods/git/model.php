@@ -14,11 +14,6 @@ class gitActionModel {
 		} else {
 			$this->gitDir = '/var/www/mys';
 		}
-		
-		if(!$this->checkGitPHPAvailability()){
-			myCore::redirectToUrl( myRoute::getRoute('git', 'unavailability') );
-			exit;
-		}
 	}
 
 	/**
@@ -27,6 +22,12 @@ class gitActionModel {
 	 * @return type
 	 */
 	public function getIndexData() {
+		
+		if(!$this->checkGitPHPAvailability()){
+			myCore::redirectToUrl( myRoute::getRoute('git', 'unavailability') );
+			exit;
+		}
+		
 		$branches = $this->getBranches();
 		$lastChanges = $this->getStatus();
 
@@ -100,9 +101,6 @@ class gitActionModel {
 	private function getStatus($withCommand = false) {
 		$ret = array();
 		$status = $this->fetchGitCommand('git status -s --no-column', $withCommand);
-		$this->appendFetchGitCommand($status, 'git commit', true);
-		$this->appendFetchGitCommand($status, 'git config --global -l', true);
-		$this->appendFetchGitCommand($status, 'git config -l', true);
 		foreach ($status as $file) {
 			$ret[] = $file;
 		}
@@ -156,24 +154,23 @@ class gitActionModel {
 		$res = myTools::arraysUnionWithoutIndex($res, $ret);
 	}
 
+	/**
+	 * если забыли добавить разделы пользователя и emaila
+	 * 
+	 * @param type $count
+	 * @return boolean
+	 */
 	private function checkGitPHPAvailability($count = 0){
 		// проверка на доступность 
 		// делаю через commit, т.к. более показательно
 		$status = $this->fetchGitCommand('git commit');
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
 		if( !count($status) ){
-			/**
-			 * @todo: взять с конфига модуля
-			 */
-			$this->fetchGitCommand('git config user.email "my@email.here"');
-			$this->fetchGitCommand('git config user.name "RomanSh"');
-			if($count<=0){
-				$this->checkGitPHPAvailability($count+1);
-			}
-			else {
-				return false;
-			}
+			return false;
 		}
+		/**
+		 * @todo зашить в файл
+		 */
 		
 		return true;
 	}

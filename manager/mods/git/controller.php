@@ -65,6 +65,10 @@ class gitActionController {
 	}
 
 	public function unavailability() {
+		echo 'try this:<br>';
+		echo 'git config user.email "my@email.here"<br>';
+		echo 'git config user.name "RomanSh"<br>';
+		echo 'or add section user in .git/config<br><br>';
 		exit('unavailability');
 	}
 
