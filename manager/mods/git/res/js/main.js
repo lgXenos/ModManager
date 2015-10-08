@@ -85,6 +85,10 @@ var myGitMod = {
 			success: function (result) {
 				if (typeof (fn) == 'function')
 					fn(result);
+			},
+			error: function(result){
+				if (typeof (fn) == 'function')
+					fn({error:{message:'ajax fail'}});
 			}
 		});
 	}

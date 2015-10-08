@@ -38,7 +38,7 @@ class gitActionModel {
 	 */
 	public function makeCommit($text) {
 		$res = array();
-		$this->appendFetchGitCommand($res, 'git commit -am "' . $text . '"', true);
+		$this->appendFetchGitCommand($res, 'git commit -am "'.$text.'"', true);
 		$this->appendFetchGitCommand($res, 'git status', true);
 		return $res;
 	}
@@ -95,6 +95,9 @@ class gitActionModel {
 	private function getStatus($withCommand = false) {
 		$ret = array();
 		$status = $this->fetchGitCommand('git status -s --no-column', $withCommand);
+		$this->appendFetchGitCommand($status, 'git commit', true);
+		$this->appendFetchGitCommand($status, 'git config --global -l', true);
+		$this->appendFetchGitCommand($status, 'git config -l', true);
 		foreach ($status as $file) {
 			$ret[] = $file;
 		}
@@ -110,12 +113,28 @@ class gitActionModel {
 	 * @return array
 	 */
 	private function fetchGitCommand($str, $withCommand = false) {
-		$cd = 'cd ' . $this->gitDir . '; ';
-		$res = myConsole::fetchExec($cd . $str);
-		$res = explode("\n", $res);
+		
+		// текущая
+		$currDir = getcwd();
+		// рабочая
+		chdir($this->gitDir);
+
+		$res = myConsole::execCommand($str . ';');
+		
+		if(is_string($res)){
+			if ($res != '') {
+				$res = explode("\n", $res);
+			} else {
+				$res = array();
+			}
+		}
+
 		if ($withCommand) {
 			array_unshift($res, '', '~$ ' . $str);
 		}
+
+		// текущая
+		chdir($currDir);
 
 		return $res;
 	}
@@ -129,7 +148,6 @@ class gitActionModel {
 	 */
 	private function appendFetchGitCommand(&$res, $str, $withCommand = false) {
 		$ret = $this->fetchGitCommand($str, $withCommand);
-		;
 		$res = myTools::arraysUnionWithoutIndex($res, $ret);
 	}
 
