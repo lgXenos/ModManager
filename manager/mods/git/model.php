@@ -23,13 +23,30 @@ class gitActionModel {
 	 */
 	public function getIndexData() {
 		
-		if(!$this->checkGitPHPAvailability()){
-			myCore::redirectToUrl( myRoute::getRoute('git', 'unavailability') );
-			exit;
-		}
+		$this->checkGitPHPAvailability();
 		
 		$branches = $this->getBranches();
 		$lastChanges = $this->getStatus();
+
+		return array(
+			'branches' => $branches,
+			'status' => $lastChanges,
+		);
+	}
+	
+	/**
+	 * получить данные для заглавной страницы
+	 * 
+	 * @return type
+	 */
+	public function getUpdateRemotesStatus() {
+		
+		$this->checkGitPHPAvailability();
+		
+		$lastChanges = array();
+		$this->appendFetchGitCommand($lastChanges, 'git remote update', true);
+		$this->appendFetchGitCommand($lastChanges, 'git remote prune origin', true);
+		$branches = $this->getBranches();
 
 		return array(
 			'branches' => $branches,
@@ -166,7 +183,9 @@ class gitActionModel {
 		$status = $this->fetchGitCommand('git commit');
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
 		if( !count($status) ){
-			return false;
+			//return false;
+			myCore::redirectToUrl( myRoute::getRoute('git', 'unavailability') );
+			exit;
 		}
 		/**
 		 * @todo зашить в файл

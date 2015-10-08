@@ -6,6 +6,7 @@
 class gitActionController {
 
 	public $gitV = false;
+	public $gitM = false;
 
 	/**
 	 * поиск и выполнение заказанного метода из текущего view
@@ -15,6 +16,7 @@ class gitActionController {
 
 		$_do = myRoute::getRequest('_do', 'str', 'getIndexPage');
 		$this->gitV = new gitActionView();
+		$this->gitM = new gitActionModel();
 
 		if (method_exists($this, $_do)) {
 			$this->$_do();
@@ -30,9 +32,7 @@ class gitActionController {
 	 */
 	public function getIndexPage() {
 
-		$gitM = new gitActionModel();
-
-		$res = $gitM->getIndexData();
+		$res = $this->gitM->getIndexData();
 
 		if (!$res) {
 			$this->gitV->renderError('no datas recieved');
@@ -50,9 +50,8 @@ class gitActionController {
 	public function commit() {
 
 		$text = myRoute::getRequest('text', 'str', 'text');
-		$gitM = new gitActionModel();
 
-		$res = $gitM->makeCommit($text);
+		$res = $this->gitM->makeCommit($text);
 
 		if(!$res){
 			myOutput::jsonError('cant fetch commit result');
@@ -60,16 +59,28 @@ class gitActionController {
 		else {
 			myOutput::jsonSuccess($res);
 		}
-
-		$this->gitV->renderIndexPage($res);
 	}
 
+	/**
+	 * сообщение про недоступность системы
+	 */
 	public function unavailability() {
 		echo 'try this:<br>';
 		echo 'git config user.email "my@email.here"<br>';
 		echo 'git config user.name "RomanSh"<br>';
 		echo 'or add section user in .git/config<br><br>';
 		exit('unavailability');
+	}
+	
+	public function update_remotes() {
+		$res = $this->gitM->getUpdateRemotesStatus();
+
+		if (!$res) {
+			$this->gitV->renderError('no datas recieved');
+			return;
+		}
+
+		$this->gitV->renderIndexPage($res);
 	}
 
 }
