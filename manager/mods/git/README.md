@@ -18,3 +18,5 @@ romanSh
 
 По идее - все.
 ---
+
+PS: нашел сходную идею http://www.ekzorchik.ru/wordpress/2014/11/install-git-server-and-web-based-interface-to-it/

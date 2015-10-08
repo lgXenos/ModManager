@@ -14,6 +14,11 @@ class gitActionModel {
 		} else {
 			$this->gitDir = '/var/www/html';
 		}
+		
+		if(!$this->checkGitPHPAvailability()){
+			myCore::redirectToUrl( myRoute::getRoute('git', 'unavailability') );
+			exit;
+		}
 	}
 
 	/**
@@ -151,4 +156,30 @@ class gitActionModel {
 		$res = myTools::arraysUnionWithoutIndex($res, $ret);
 	}
 
+	private function checkGitPHPAvailability($count = 0){
+		// проверка на доступность 
+		// делаю через commit, т.к. более показательно
+		$status = $this->fetchGitCommand('git commit');
+		$isValid = false;
+		// если ничего не получили - значит некий сбой. может - нет данных о себе
+		if( !count($status) ){
+			/**
+			 * @todo: взять с конфига модуля
+			 */
+			$this->fetchGitCommand('git config --global user.email "lgcrey@mail.ru"');
+			$this->fetchGitCommand('git config --global user.name "RomanSh"');
+			if($count<=0){
+				$this->checkGitPHPAvailability($count+1);
+			}
+		}
+		var_dump($isValid);
+		
+		$this->fetchGitCommand('gitcommit');
+		$this->fetchGitCommand('gitcommit');
+		$this->fetchGitCommand('gitcommit');
+		
+		exit('asd');
+		
+		return $isValid;
+	}
 }

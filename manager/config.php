@@ -2,6 +2,8 @@
 
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
+global $HOME;
+$HOME = false;
 
 // файловый путь. для инклудов и пр.
 define('FLS_DIR', dirname(__FILE__));

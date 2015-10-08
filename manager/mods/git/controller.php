@@ -19,7 +19,7 @@ class gitActionController {
 		if (method_exists($this, $_do)) {
 			$this->$_do();
 		} else {
-			$this->gitV->renderError('undefined');
+			$this->gitV->renderError('undefined '.$_do);
 		}
 	}
 
@@ -64,12 +64,8 @@ class gitActionController {
 		$this->gitV->renderIndexPage($res);
 	}
 
-	public function renderCSS() {
-		$this->gitV->renderCSS();
-	}
-
-	public function renderJS() {
-		$this->gitV->renderJS();
+	public function unavailability() {
+		exit('unavailability');
 	}
 
 }
