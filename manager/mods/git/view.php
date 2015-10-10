@@ -43,13 +43,13 @@ class gitActionView {
 				$html .= '
 					<tr>
 						<td>
-							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', array('alias' => $_i, 'type' => 'branch-D')) . '">X</a> 
+							<a class="button showOnHover" href="#" data-type="local" data-name="'. $_i .'">+</a> 
 								|
 							' . $local . '
 						</td>
 						<td width="70px">&nbsp;</td>
 						<td>
-							<a class="button showOnHover" href="' . myRoute::getRoute('git', 'delBranch', array('alias' => $_i, 'type' => 'push:')) . '">X</a> 
+							<a class="button showOnHover" href="#" data-type="remote" data-name="'. $_i .'">+</a> 
 								|
 							' . $remote . '
 						</td>

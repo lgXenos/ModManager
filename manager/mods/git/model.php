@@ -46,6 +46,7 @@ class gitActionModel {
 		$lastChanges = array();
 		$this->appendFetchGitCommand($lastChanges, 'git remote update', true);
 		$this->appendFetchGitCommand($lastChanges, 'git remote prune origin', true);
+		$this->appendFetchGitCommand($lastChanges, 'git status -s --no-column', true);
 		$branches = $this->getBranches();
 
 		return array(

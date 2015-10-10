@@ -98,7 +98,7 @@ class myOutput {
 		$title = $title ? $title : 'MyTitle / RomanSh';
 		
 		if(myCore::$currentAction != ''){
-			// подключим некоме меню на внутренних страницах
+			// подключим некое меню на внутренних страницах
 		}
 
 		return '

@@ -32,4 +32,6 @@ root# chown roman {site-dir} -R
 root# chgrp www-data {site-dir} -R
 ~~~
 
-PS: нашел сходную идею http://www.ekzorchik.ru/wordpress/2014/11/install-git-server-and-web-based-interface-to-it/
+PS: уже после начала работы, находясь в поисках очередной проблемы, натолкнулся на то, что я решил сделать тот же GitWeb.
+Ну да ладно.
+:)

@@ -22,3 +22,12 @@
     width: 100%;
     height: 1px;
 }
+.showOnHover{
+	background: #526AD6 url(../img/menu_ico.png) center center no-repeat;
+    width: 11px;
+    height: 16px;
+    font-size: 1px;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 4px;
+}
