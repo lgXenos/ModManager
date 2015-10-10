@@ -31,6 +31,7 @@ name = RomanSh
 root# chown roman {site-dir} -R
 root# chgrp www-data {site-dir} -R
 ~~~
+Также, обращаю внимание: чет оно иногда подглючивает со словами "insufficient permission for adding an object to repository database .git/objects". И операция выше возвращает работоспособность репы. Позже надо попробовать дать для папки GID и UID.
 
 PS: уже после начала работы, находясь в поисках очередной проблемы, натолкнулся на то, что я решил сделать тот же GitWeb.
 Ну да ладно.

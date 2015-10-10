@@ -25,16 +25,15 @@ class gitActionView {
 			// перебор имеющихся веток
 			foreach ($res['branches'] as $_i => $_v) {
 
-
-				$local = isset($_v['local']) ? $_i : '';
-				if (isset($_v['local']) AND $_v['local'] > 1) {
-					$local = '<a href="https://redmine.suffra.com/issues/' . $_v['local'] . '" target="_blank">' . $local . '</a>';
+				// проверяем наличие в массиве списка индексов и превращаем или в $текст или в $$переменную
+				$indexArr = array('local','remote');
+				foreach($indexArr as $_f){
+					$$_f  = isset($_v[$_f]) ? $_i : '';
+					if (isset($_v[$_f]) AND $_v[$_f] > 1) {
+						$$_f = '<a href="https://redmine.suffra.com/issues/' . $_v[$_f] . '" target="_blank">' . $$_f . '</a>';
+					}
 				}
 
-				$remote = isset($_v['remote']) ? $_i : '';
-				if (isset($_v['remote']) AND $_v['remote'] > 1) {
-					$remote = '<a href="https://redmine.suffra.com/issues/' . $_v['remote'] . '" target="_blank">' . $remote . '</a>';
-				}
 
 				if (!$current) {
 					$current = isset($_v['current']) ? $_i : false;
@@ -47,7 +46,7 @@ class gitActionView {
 								|
 							' . $local . '
 						</td>
-						<td width="70px">&nbsp;</td>
+						<td>&nbsp;</td>
 						<td>
 							<a class="button showOnHover" href="#" data-type="remote" data-name="'. $_i .'">+</a> 
 								|
@@ -60,8 +59,7 @@ class gitActionView {
 			$currentHtml = '<i>cant parse name of current branch :(</i>';
 			if ($current) {
 				$currentHtml = '
-					<a class="button" href="' . myRoute::getRoute('git', 'push') . '">push</a> |
-					<a class="button js_git_commit" href="#">commit</a> |
+					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
 					on branch: <strong>' . $current . '</strong>
 				';
 			}
@@ -92,6 +90,11 @@ class gitActionView {
 					</a>
 				</div>
 				<table class="mainTable">
+					<tr>
+						<th>local branches</th>
+						<th width="70px">&nbsp;</th>
+						<th>remotes branches</th>
+					</tr>
 					' . $html . '
 				</table>
 			';

@@ -49,6 +49,7 @@ class myConfig {
 	 * получить переменную конфигурации
 	 * 
 	 * изначально доступны <br>
+	 * * modManagerName <br>
 	 * * fullPath <br>
 	 * * webPath <br>
 	 * * modsPath<br>

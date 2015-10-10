@@ -37,3 +37,12 @@ td:hover .showOnHover{
 	overflow-y: auto;
 	overflow-x: auto;
 }
+.topMenu{
+	display: block;
+	padding: 0;
+}
+.topMenu li, .topMenu span{
+	display: inline-block;
+	padding: 0px 5px;
+	vertical-align: top;
+}

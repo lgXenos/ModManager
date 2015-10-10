@@ -21,6 +21,7 @@ spl_autoload_register("my_autoload");
 
 $cfg = array(
 	// fullPath set in getInstance
+	'modManagerName' => 'My PHP ModManager',
 	'webPath' => '/manager',
 	'modsPath' => FLS_DIR . '/mods'
 );
