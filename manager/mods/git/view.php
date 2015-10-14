@@ -26,6 +26,7 @@ class gitActionView {
 			foreach ($res['branches'] as $_i => $_v) {
 
 				// проверяем наличие в массиве списка индексов и превращаем или в $текст или в $$переменную
+				// на выходе будут PHP-переменные $local и $remote
 				$indexArr = array('local','remote');
 				foreach($indexArr as $_f){
 					$$_f  = isset($_v[$_f]) ? $_i : '';
@@ -42,13 +43,13 @@ class gitActionView {
 				$html .= '
 					<tr>
 						<td>
-							<a class="button showOnHover" href="#" data-type="local" data-name="'. $_i .'">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="local" data-name="'. $_i .'">+</a> 
 								|
 							' . $local . '
 						</td>
 						<td>&nbsp;</td>
 						<td>
-							<a class="button showOnHover" href="#" data-type="remote" data-name="'. $_i .'">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="remote" data-name="'. $_i .'">+</a> 
 								|
 							' . $remote . '
 						</td>
@@ -60,6 +61,7 @@ class gitActionView {
 			if ($current) {
 				$currentHtml = '
 					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
+					<a class="button js_git_push" href="#" title="сделать push origin {ветка}">push</a> |
 					on branch: <strong>' . $current . '</strong>
 				';
 			}
@@ -85,7 +87,7 @@ class gitActionView {
 				<div class="currFicha spacer">' . $currentHtml . '</div>
 				'.$status.'
 				<div class="spacer">
-					<a class="button" href="' . myRoute::getRoute('git', 'update_remotes') . '">
+					<a class="button js_show_loading" href="' . myRoute::getRoute('git', 'update_remotes') . '">
 						git remote update, git remote prune origin
 					</a>
 				</div>

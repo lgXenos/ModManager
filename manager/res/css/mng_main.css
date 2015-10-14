@@ -46,3 +46,24 @@ td:hover .showOnHover{
 	padding: 0px 5px;
 	vertical-align: top;
 }
+.js_myLoaderWrap{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background-color: rgba(255, 255, 255, 0.79);
+	top: 0;
+    left: 0;
+	display:none;
+	z-index: 9999999;
+}
+.js_myLoader{
+	position: absolute;
+	width:28px;
+	height: 28px;
+	top:20px;
+	right:20px;
+	background: url(../../res/img/loading.gif) center center no-repeat;
+}
+.isRelative{
+	position: relative;
+}

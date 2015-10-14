@@ -155,10 +155,19 @@ class myCore {
 		myOutput::out('<h3><a href="/">To Home /</a></h3>');
 		exit();
 	}
-	
+
 	public static function redirectToUrl($url) {
 		header("Location: $url");
 		exit;
+	}
+
+	public static function returnErrorArray($message, $id = -1) {
+		return array(
+			'error' => array(
+				'id' => $id,
+				'message' => $message,
+			)
+		);
 	}
 
 	private function __construct() {

@@ -139,7 +139,9 @@ class myOutput {
 				<head>
 					<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 					<title>' . $title . '</title>
-					<link type="text/css" rel="stylesheet" href="' . myConfig::get('webPath') . '/res/css/main.css' . '">
+					<link type="text/css" rel="stylesheet" href="' . myConfig::get('webPath') . '/res/css/mng_main.css">
+					<script type="text/javascript">/*Global JS Vars*/var G = {}; G.moduleUrl = "' . myRoute::getRoute(myCore::$currentAction) . '";</script>
+					<script type="text/javascript" src="' . myConfig::get('webPath') . '/res/js/mng_main.js"></script>
 				</head>
 				<body>
 				<div id="siteHead">
@@ -173,7 +175,6 @@ class myOutput {
 		return '
 					<!-- footer/ -->
 					<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-					<script type="text/javascript">/*Global JS Vars*/var G = {}; G.moduleUrl = "' . myRoute::getRoute(myCore::$currentAction) . '";</script>
 					' . $addScripts . '
 				</body>
 			</html>
