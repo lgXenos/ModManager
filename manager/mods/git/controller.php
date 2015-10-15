@@ -160,14 +160,24 @@ class gitActionController {
 	}
 	
 	/**
+	 * сменить текущий репозиторий и открыть титульную страницу
+	 */
+	public function change_rep() {
+		$repName = myRoute::getRequestParams('rep_name', 'str', false);
+		$this->gitM->changeRepository($repName);
+		header('Location: '.myRoute::getRoute('git'));
+	}
+	
+	/**
 	 * сообщение про недоступность системы
 	 */
 	public function unavailability() {
+		echo '<h1>unavailability</h1>';
 		echo 'try this:<br>';
 		echo 'git config user.email "my@email.here"<br>';
 		echo 'git config user.name "RomanSh"<br>';
 		echo 'or add section user in .git/config<br><br>';
-		exit('unavailability');
+		echo '<a href="'.myRoute::getRoute('git').'">Click here to try again</a>';
 	}
 
 	/**

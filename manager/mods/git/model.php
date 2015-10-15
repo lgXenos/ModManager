@@ -5,15 +5,54 @@
  */
 class gitActionModel {
 
+	// массив доступных репозиториев
+	public $gitReps = array();
+	// активный элемент массива
+	public $currentGitRep = false;
+	// непосредственно путь к текущему репу
 	public $gitDir = '.';
+	
+	// имя куки
+	public $currentGitRepCoockieName = "currentGitRep";
 
 	// hard-coding
 	public function __construct() {
-		if (file_exists('/opt/var/www/instant')) {
-			$this->gitDir = '/opt/var/www/instant';
-		} else {
-			$this->gitDir = '/var/www/mys';
+		$this->initGitReps();
+	}
+	
+	/**
+	 * подгружает доступные репы и заполняет переменные
+	 * - $this->gitDir
+	 * - $this->currentGitRep
+	 */
+	private function initGitReps(){
+		// от корня File System
+		$reps = array (
+			array('path'=>'/opt/var/www/instant', 'name'=>'instant'),
+			array('path'=>'/home/prog5/RomanSh/modManager', 'name'=>'mys work'),
+			array('path'=>'/var/www/mys', 'name'=>'mys home')
+		);
+		foreach($reps as $rep){
+			$repPath = $rep['path'];
+			if(file_exists($repPath)){
+				$this->gitReps[$repPath] = $rep;
+			}
 		}
+		// по умолчанию - активный первый
+		$currentRep = current($this->gitReps);
+		
+		// если есть кука текущего репа - поискать такой реп
+		if(isset($_COOKIE[$this->currentGitRepCoockieName])){
+			
+			$cookRepName = $_COOKIE[$this->currentGitRepCoockieName];
+			if(isset($this->gitReps[$cookRepName])){
+				$currentRep = $this->gitReps[$cookRepName];
+				$this->gitReps[$cookRepName]['active'] = 1;
+			}
+		}
+		
+		$this->gitDir = $currentRep['path'];
+		$this->currentGitRep = $currentRep;
 	}
 
 	/**
@@ -31,6 +70,7 @@ class gitActionModel {
 		return array(
 			'branches' => $branches,
 			'status' => $lastChanges,
+			'reps' => $this->gitReps,
 		);
 	}
 
@@ -52,6 +92,7 @@ class gitActionModel {
 		return array(
 			'branches' => $branches,
 			'status' => $lastChanges,
+			'reps' => $this->gitReps,
 		);
 	}
 
@@ -139,9 +180,10 @@ class gitActionModel {
 	 */
 	private function getStatus($withCommand = false) {
 		$ret = array();
-		$status = $this->fetchGitCommand('git status -s --no-column', $withCommand);
-		foreach ($status as $file) {
-			$ret[] = $file;
+		$this->appendFetchGitCommand($ret, 'git status -s --no-column', $withCommand);
+		if(count($ret)==0){
+			$lastDate = current($this->fetchGitCommand("git log  --format='%ai' -1"));
+			$ret[] = '~$ already up to date '.$lastDate;
 		}
 
 		return $ret;
@@ -215,6 +257,15 @@ class gitActionModel {
 			'branches' => $branches,
 			'status' => $ret,
 		);
+	}
+	
+	/**
+	 * сменить текущий репозиторий через проставление куки
+	 * 
+	 * @param type $repName
+	 */
+	public function changeRepository($repName) {
+		setcookie ($this->currentGitRepCoockieName, $repName, time()+3600 * 24 * 31);/* период действия - 1 месяц */
 	}
 
 	/**

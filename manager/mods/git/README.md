@@ -29,9 +29,12 @@ name = RomanSh
 
 Хотя, т.к. теперь апач от имени www-data хозяйничать в нашей папке сайта. И может назаписывать туда. И мы не сможем это изменить без рута... В общем я сделал так:
 ~~~
-root# chown roman {site-dir} -R
-root# chgrp www-data {site-dir} -R
-root# cd {site-dir}; sudo chmod -R u=rwx,g=rwx,o=r *
+1. Присвоил UID папке в которой есть гит
+2. Присвоил GID папке в которой есть гит
+Далее:
+root# sudo chown roman {site-dir} -R
+root# sudo chgrp www-data {site-dir} -R
+root# cd {site-dir}; sudo chmod -R u=rwx,g=rwx,o=r .
 ~~~
 Также, обращаю внимание: чет оно иногда подглючивает со словами "insufficient permission for adding an object to repository database .git/objects". И операция выше возвращает работоспособность репы. Позже надо попробовать дать для папки GID и UID.
 

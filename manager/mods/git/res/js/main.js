@@ -240,6 +240,12 @@ var myGitMod = {
 				.on("mouseover", ".js_showBranchActionsPopup", function () {
 					self._addPopupActionMenu($(this));
 				})
+				// долгие операции имеют класс псевдо-загрузки
+				.on("change", ".js_repsChng", function () {
+					var that = $(this);
+					var url = myModManager.getJSRoute('change_rep', {rep_name: that.val()});
+					window.location = url;
+				})
 
 	},
 };

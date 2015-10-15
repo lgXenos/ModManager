@@ -32,7 +32,7 @@ class myRoute {
 	}
 
 	/**
-	 * взять переменную из $_REQUEST
+	 * взять переменную из $_REQUEST и привести к типу
 	 * 
 	 * @param type $var
 	 * @param type $type
@@ -43,6 +43,37 @@ class myRoute {
 		
 		$var = isset($_REQUEST[$var]) ? $_REQUEST[$var] : $default;
 
+		return self::varToType($var, $type);
+	}
+	
+	/**
+	 * взять переменную из массива params и привести к типу
+	 * 
+	 * @param type $var
+	 * @param type $type
+	 * @param type $default
+	 * @return type
+	 */
+	public static function getRequestParams($var, $type = '', $default = null) {
+		
+		$params = myRoute::getRequest('params', 'arr', []);
+		
+		$ret = $default;
+		if(isset($params[$var])){
+			$ret = self::varToType($params[$var], $type);
+		}
+
+		return $ret;
+	}
+	
+	/**
+	 * привести переменную к заданному типу
+	 * 
+	 * @param type $var
+	 * @param type $type
+	 * @return type
+	 */
+	public static function varToType($var, $type) {
 		switch ($type) {
 			case 'int': {
 					$var = intval($var);
@@ -53,9 +84,10 @@ class myRoute {
 					break;
 				}
 		}
-
+		
 		return $var;
 	}
+	
 
 	/**
 	 * получить переменную action из урла + перезаписать переменные в урле

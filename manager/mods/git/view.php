@@ -20,6 +20,38 @@ class gitActionView {
 		$html = '';
 		if (is_array($res)) {
 
+			$repsHtml = '<div class="gitReps">';
+			// список доступных репов
+			// если один
+			if (count($res['reps']) == 1) {
+				$currRep = current($res['reps']);
+				$repsHtml .= '
+					<div class="block">
+						repository: <b>' . $currRep['name'] . '</b>
+					</div>';
+			}
+			// если много
+			else {
+				$repsHtml .= '
+					<div class="block">
+						repository:
+					<select name="rep" class="js_repsChng">';
+				foreach ($res['reps'] as $currRep) {
+					$name = $currRep['name'];
+					$path = $currRep['path'];
+					$active = isset($currRep['active']) ? ' selected ' : '';
+					$repsHtml .= '<option value="' . $path . '" '.$active.'>' . $name . '</option>';
+				}
+				$repsHtml .= '</select></div>';
+			}
+			$repsHtml .= '
+					<div class="block">
+						<a class="button" href="?" title="обновить текущее состояние">refresh</a>
+					</div>';
+			$repsHtml .= '</div>';
+
+
+
 			$current = false;
 
 			// перебор имеющихся веток
@@ -27,9 +59,9 @@ class gitActionView {
 
 				// проверяем наличие в массиве списка индексов и превращаем или в $текст или в $$переменную
 				// на выходе будут PHP-переменные $local и $remote
-				$indexArr = array('local','remote');
-				foreach($indexArr as $_f){
-					$$_f  = isset($_v[$_f]) ? $_i : '';
+				$indexArr = array('local', 'remote');
+				foreach ($indexArr as $_f) {
+					$$_f = isset($_v[$_f]) ? $_i : '';
 					if (isset($_v[$_f]) AND $_v[$_f] > 1) {
 						$$_f = '<a href="https://redmine.suffra.com/issues/' . $_v[$_f] . '" target="_blank">' . $$_f . '</a>';
 					}
@@ -43,13 +75,13 @@ class gitActionView {
 				$html .= '
 					<tr>
 						<td>
-							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="local" data-name="'. $_i .'">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="local" data-name="' . $_i . '">+</a> 
 								|
 							' . $local . '
 						</td>
 						<td>&nbsp;</td>
 						<td>
-							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="remote" data-name="'. $_i .'">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="remote" data-name="' . $_i . '">+</a> 
 								|
 							' . $remote . '
 						</td>
@@ -70,22 +102,21 @@ class gitActionView {
 			foreach ($res['status'] as $_i => $_v) {
 				$_s .= $_v . '<br>';
 			}
-			if($_s==''){
-				$_s = 'already up to date';
-			}
+
 			$status = '
+			' . $repsHtml . '
 			<div class="spacer">
 				<div class="scrollerXY" style="height:170px;">
 					<div class="asConsole js_myConsole">
-						'.$_s.'
+						' . $_s . '
 					</div>
 				</div>
 			</div>
 			';
-            
+
 			$html = '
 				<div class="currFicha spacer">' . $currentHtml . '</div>
-				'.$status.'
+				' . $status . '
 				<div class="spacer">
 					<a class="button js_show_loading" href="' . myRoute::getRoute('git', 'update_remotes') . '">
 						git remote update, git remote prune origin
@@ -100,7 +131,6 @@ class gitActionView {
 					' . $html . '
 				</table>
 			';
-
 		}
 
 		myOutput::addCSS('main.css');

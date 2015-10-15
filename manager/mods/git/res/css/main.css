@@ -13,6 +13,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	line-height: 140%;
+    font-size: 12px;
 }
 .asConsole .hr{
 	border-bottom: 1px solid grey;
@@ -57,4 +58,17 @@
 }
 .popupMenu li:hover, .popupMenu a:hover{
 	text-decoration: underline;
+}
+.gitReps{
+	white-space: nowrap;
+	text-align: right;
+}
+.gitReps, .gitReps select{
+	font-size: 16px;
+}
+.gitReps .block{
+	display: inline-block;
+	vertical-align: top;
+    padding: 0 10px;
+    border-left: 1px solid #808080;
 }
