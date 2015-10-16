@@ -30,7 +30,8 @@ class gitActionModel {
 		$reps = array (
 			array('path'=>'/opt/var/www/instant', 'name'=>'instant'),
 			array('path'=>'/home/prog5/RomanSh/modManager', 'name'=>'mys work'),
-			array('path'=>'/var/www/mys', 'name'=>'mys home')
+			array('path'=>'/var/www/mys', 'name'=>'mys home'),
+			array('path'=>'/opt/var/www/admin', 'name'=>'admin')
 		);
 		foreach($reps as $rep){
 			$repPath = $rep['path'];
@@ -73,6 +74,39 @@ class gitActionModel {
 			'reps' => $this->gitReps,
 		);
 	}
+	
+	/**
+	 * добавялем новый бранч из состояния текущего
+	 * 
+	 * @return type
+	 */
+	public function addNewBranch($branchName) {
+
+		$branches = $this->getBranches();
+		$lastChanges = $this->getStatus();
+		
+		// проверим, чтоб все было комиченным
+		$currStatus = $this->fetchGitCommand('git status -s');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			$lastChanges[] = 'ERROR$ You must commit your changes first';
+		}
+		// проверим, чтоб такого бранча не было
+		elseif (isset($branches[$branchName]) AND isset($branches[$branchName]['local'])) {
+			$lastChanges[] = 'ERROR$ A branch named "'.$branchName.'" already exists.';
+		}
+		else {
+			$this->appendFetchGitCommand($lastChanges, 'git checkout -b '.$branchName, true);
+			$branches = $this->getBranches();
+			$this->appendFetchGitCommand($lastChanges, 'git status -s --no-column', true);
+		}
+
+
+		return array(
+			'branches' => $branches,
+			'status' => $lastChanges,
+			'reps' => $this->gitReps,
+		);
+	}
 
 	/**
 	 * получить данные для заглавной страницы
@@ -80,8 +114,6 @@ class gitActionModel {
 	 * @return type
 	 */
 	public function getUpdateRemotesStatus() {
-
-		$this->checkGitPHPAvailability();
 
 		$lastChanges = array();
 		$this->appendFetchGitCommand($lastChanges, 'git remote update', true);
@@ -222,6 +254,7 @@ class gitActionModel {
 		return array(
 			'branches' => $branches,
 			'status' => $ret,
+			'reps' => $this->gitReps,
 		);
 	}
 
@@ -239,6 +272,7 @@ class gitActionModel {
 		return array(
 			'branches' => $branches,
 			'status' => $ret,
+			'reps' => $this->gitReps,
 		);
 	}
 
@@ -249,13 +283,30 @@ class gitActionModel {
 	 */
 	public function deleteLocal($branchName) {
 		$ret = array();
-		!($branchName) ? $ret[] = 'ERROR$ no branchName' : $this->appendFetchGitCommand($ret, 'git branch -D ' . $branchName, true);
+		$branches = $this->getBranches();
+		// проверим, чтоб бранч был, и мы не были в нем
+		if(isset($branches[$branchName]) AND !isset($branches[$branchName]['current'])){
+			$this->appendFetchGitCommand($ret, 'git branch -D ' . $branchName, true);
+		}
+		else {
+			if(!$branchName){
+				$ret[] = 'ERROR$ no branchName';
+			}
+			elseif( !isset($branches[$branchName]) ){
+				$ret[] = 'ERROR$ branch is not exists' ;
+			}
+			elseif( isset($branches[$branchName]['current']) ){
+				$ret[] = 'ERROR$ branch is current' ;
+			}
+		}
 		$this->appendFetchGitCommand($ret, 'git status -s --no-column', true);
+		
 		$branches = $this->getBranches();
 
 		return array(
 			'branches' => $branches,
 			'status' => $ret,
+			'reps' => $this->gitReps,
 		);
 	}
 	

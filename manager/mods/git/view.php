@@ -8,7 +8,13 @@ class gitActionView {
 	 * @param type $text
 	 */
 	public function renderError($text) {
-		myOutput::out($text);
+		$resText = $text;
+		if(is_array($text)){
+			if(isset($text['error']) AND isset($text['error']['message'])){
+				$resText = $text['error']['message'];
+			}
+		}
+		myOutput::out($resText);
 	}
 
 	/**
@@ -19,6 +25,11 @@ class gitActionView {
 	public function renderIndexPage($res) {
 		$html = '';
 		if (is_array($res)) {
+			
+			if(isset($res['error'])){
+				$this->renderError($res);
+				exit;
+			}
 
 			$repsHtml = '<div class="gitReps">';
 			// список доступных репов
@@ -94,6 +105,7 @@ class gitActionView {
 				$currentHtml = '
 					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
 					<a class="button js_git_push" href="#" title="сделать push origin {ветка}">push</a> |
+					<a class="button js_git_add_branch" href="#" title="сделать checkout -b {имя_ветки}">+</a> |
 					on branch: <strong>' . $current . '</strong>
 				';
 			}

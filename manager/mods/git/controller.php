@@ -134,6 +134,25 @@ class gitActionController {
 	}
 
 	/**
+	 * создание нового бранча
+	 * 
+	 * @return type
+	 */
+	public function add_branch() {
+
+		$text = myRoute::getRequestParams('text', 'str', 'text');
+
+		$res = $this->gitM->addNewBranch($text);
+		
+		if (!$res) {
+			$this->gitV->renderError('no datas recieved');
+			return;
+		}
+
+		$this->gitV->renderIndexPage($res);
+	}
+
+	/**
 	 * пушим сами себя в себя
 	 * 
 	 * @return type

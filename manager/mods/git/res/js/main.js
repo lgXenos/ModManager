@@ -210,6 +210,17 @@ var myGitMod = {
 					}
 					return false;
 				})
+				// кнопка добавления новой ветки
+				.on("click", ".js_git_add_branch", function () {
+					var ansv = prompt("input branch-name: branch -b {имя_ветки}:", "master");
+					if (ansv) {
+						var fn = function (res) {
+							self._appendConsoleAnswer(res);
+						};
+						window.location = myModManager.getJSRoute('add_branch',{text: ansv});
+					}
+					return false;
+				})
 				// кнопка пуш текущей ветки
 				.on("click", ".js_git_push", function () {
 					var fn = function (res) {
