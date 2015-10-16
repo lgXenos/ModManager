@@ -82,6 +82,9 @@ class gitActionModel {
 	 */
 	public function addNewBranch($branchName) {
 
+		// уберем пробелы из имени ветки
+		$branchName ? $branchName = str_replace(' ', '_', $branchName) : '';
+		
 		$branches = $this->getBranches();
 		$lastChanges = $this->getStatus();
 		
@@ -236,6 +239,8 @@ class gitActionModel {
 		
 		$ret = array();
 		$this->appendFetchGitCommand($ret, 'git pull --commit origin ' . $branchName, true);
+		
+		$this->fixFilesPermissionsOnGitRoot();
 
 		return $ret;
 	}
@@ -255,6 +260,8 @@ class gitActionModel {
 		
 		$ret = array();
 		$this->appendFetchGitCommand($ret, 'git merge --commit ' . $branchName, true);
+		
+		$this->fixFilesPermissionsOnGitRoot();
 
 		return $ret;
 	}
@@ -404,6 +411,17 @@ class gitActionModel {
 		 * @todo зашить в файл
 		 */
 		return true;
+	}
+	
+	/**
+	 *  возникла проблема, что после пула-мержа пермишены становятся как
+	 * www-data / www-data /rw- r-- r--
+	 * 
+	 * :(
+	 * 
+	 */
+	public function fixFilesPermissionsOnGitRoot(){
+		myConsole::execCommand('chmod -R g=rw '.$this->gitDir.'/.');
 	}
 
 }
