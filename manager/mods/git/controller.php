@@ -132,6 +132,20 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant fetch commit result');
 	}
+	
+	/**
+	 * коммит текущего состояния
+	 * 
+	 * @return type
+	 */
+	public function merge_local() {
+
+		$branchName = myRoute::getRequest('branch_name', 'str', false);
+
+		$res = $this->gitM->mergeLocal($branchName);
+
+		$this->processStdJson($res, 'cant fetch merge result');
+	}
 
 	/**
 	 * создание нового бранча

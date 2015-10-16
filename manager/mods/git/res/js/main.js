@@ -164,9 +164,20 @@ var myGitMod = {
 				self.__getNodeFromParams({
 					tag: 'a',
 					coverTag: 'li',
+					class: 'js_promptBefore',
 					html: 'branch -D[elete] ' + branchName,
 					attr: {href: myModManager.getJSRoute('delete_local', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}
+				})
+				);
+
+		// git merge {...}
+		menuBlock.append(
+				self.__getNodeFromParams({
+					tag: 'li',
+					class: 'js_magicButton',
+					html: 'merge from ' + branchName,
+					data: {method: 'merge_local', name: branchName}
 				})
 				);
 	},
@@ -188,7 +199,7 @@ var myGitMod = {
 		menuBlock.append(
 				self.__getNodeFromParams({
 					tag: 'a',
-					class: 'js_show_loading',
+					class: 'js_show_loading js_promptBefore',
 					coverTag: 'li',
 					html: '[delete] ' + branchName,
 					attr: {href: myModManager.getJSRoute('delete_remote', {branch_name: branchName})},

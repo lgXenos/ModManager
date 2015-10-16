@@ -239,6 +239,25 @@ class gitActionModel {
 
 		return $ret;
 	}
+	
+	/**
+	 * пробует смержиться 
+	 * 
+	 * @param type $branchName
+	 */
+	public function mergeLocal($branchName) {
+		
+		// проверим, чтоб все было комиченным
+		$currStatus = $this->fetchGitCommand('git status -s');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			return myCore::returnErrorArray('You must commit your changes first');
+		}
+		
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git merge --commit ' . $branchName, true);
+
+		return $ret;
+	}
 
 	/**
 	 * меняем ветку
