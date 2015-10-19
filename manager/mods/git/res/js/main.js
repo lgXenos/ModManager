@@ -16,7 +16,7 @@ var myGitMod = {
 		// прослушки
 		self._binds();
 		// фикс урла чтоб по Ф5 не отправлялось
-		history.pushState(null, null, G.moduleUrl)
+		history.pushState(null, null, G.moduleUrl);
 	},
 	// добавляем в "консоль" инфу
 	_appendConsoleAnswer: function (res) {
