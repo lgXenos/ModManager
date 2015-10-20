@@ -399,17 +399,13 @@ class gitActionModel {
 	 */
 	private function checkGitPHPAvailability($count = 0) {
 		// проверка на доступность 
-		// делаю через commit, т.к. более показательно
-		$status = $this->fetchGitCommand('git commit');
+		$status = $this->fetchGitCommand('git log -1');
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
 		if (!count($status)) {
 			//return false;
 			myCore::redirectToUrl(myRoute::getRoute('git', 'unavailability'));
 			exit;
 		}
-		/**
-		 * @todo зашить в файл
-		 */
 		return true;
 	}
 	

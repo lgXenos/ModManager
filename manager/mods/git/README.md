@@ -32,11 +32,10 @@ name = RomanSh
 1. Присвоил UID папке в которой есть гит
 2. Присвоил GID папке в которой есть гит
 Далее:
-root# sudo chown roman {site-dir} -R
-root# sudo chgrp www-data {site-dir} -R
+root# sudo chown www-data {site-dir} -R
+root# sudo chgrp roman {site-dir} -R
 root# cd {site-dir}; sudo chmod -R u=rwx,g=rwx,o=r .
 ~~~
-Также, обращаю внимание: чет оно иногда подглючивает со словами "insufficient permission for adding an object to repository database .git/objects". И операция выше возвращает работоспособность репы. Позже надо попробовать дать для папки GID и UID.
 
 PS: уже после начала работы, находясь в поисках очередной проблемы, натолкнулся на то, что я решил сделать тот же GitWeb.
 Ну да ладно.
