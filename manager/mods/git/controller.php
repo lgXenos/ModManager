@@ -211,10 +211,13 @@ class gitActionController {
 		echo 'git config user.name "RomanSh"<br>';
 		echo 'or add section user in .git/config<br><br>';
 		echo '<a href="'.myRoute::getRoute('git').'">Click here to try again</a>';
-		echo '<hr>';
-		echo 'last logs:<textarea style="width:100%;" rows="11">'. 
-				implode("\n", myConsole::execCommand('tail -n 10 /var/log/apache2/error.log;'))
-		.'</textarea>';
+		// может выведем немного из лога апача
+		if(file_exists('/var/log/apache2/error.log')){
+			echo '<hr>';
+			echo 'last logs:<textarea style="width:100%;" rows="11">'. 
+					implode("\n", myConsole::execCommand('tail -n 10 /var/log/apache2/error.log;'))
+			.'</textarea>';
+		}
 	}
 
 	/**

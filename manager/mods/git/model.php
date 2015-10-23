@@ -417,7 +417,7 @@ class gitActionModel {
 	 * 
 	 */
 	public function fixFilesPermissionsOnGitRoot(){
-		myConsole::execCommand('chmod -R g=rw '.$this->gitDir.'/.');
+		myConsole::execCommand('chmod -R g=rwx '.$this->gitDir.'/.*');
 	}
 
 }
