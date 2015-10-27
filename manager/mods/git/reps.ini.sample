@@ -1,0 +1,19 @@
+;
+; список доступных репозиториев (от корня File System)
+; будут использоваться лишь существующие
+;
+; [repository_name]
+; path = 'path_to_rep'
+; ...
+
+[instant]
+path = '/opt/var/www/instant'
+
+[mys work]
+path = '/home/prog5/RomanSh/modManager'
+
+[mys home]
+path = '/var/www/mys'
+
+[admin]
+path = '/opt/var/www/admin'

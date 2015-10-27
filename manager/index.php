@@ -13,6 +13,8 @@ if ($action == '') {
 // подключаем mod 
 if (myCore::tryIncludeMod($action)) {
 	$className = $action . 'ActionController';
+	// добавим переменную в конфиг
+	myConfig::set('fsPathToMod', myConfig::get('modsPath') .'/'. $action);
 	new $className;
 	exit;
 }

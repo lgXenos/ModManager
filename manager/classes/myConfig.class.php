@@ -50,9 +50,10 @@ class myConfig {
 	 * 
 	 * изначально доступны <br>
 	 * * modManagerName <br>
-	 * * fullPath <br>
-	 * * webPath <br>
-	 * * modsPath<br>
+	 * * fullPath - файловый путь к менеджеру<br>
+	 * * webPath - урл к менеджеру<br>
+	 * * modsPath - путь к папке модулей<br>
+	 * * fsPathToMod - появится, если подключен мод
 	 * 
 	 * @param type $name
 	 * @throws Exception

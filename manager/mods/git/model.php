@@ -26,13 +26,18 @@ class gitActionModel {
 	 * - $this->currentGitRep
 	 */
 	private function initGitReps(){
-		// от корня File System
-		$reps = array (
-			array('path'=>'/opt/var/www/instant', 'name'=>'instant'),
-			array('path'=>'/home/prog5/RomanSh/modManager', 'name'=>'mys work'),
-			array('path'=>'/var/www/mys', 'name'=>'mys home'),
-			array('path'=>'/opt/var/www/admin', 'name'=>'admin')
-		);
+		$reps = array ();
+		
+		$_iniFilePath = myConfig::get('fsPathToMod') . '/reps.ini';
+		if (!file_exists($_iniFilePath)) {
+			exit('Rename <u>/manager/mods/git/reps.ini.sample</u> to *.ini and refresh page.');
+		}
+		
+		$iniArray = parse_ini_file($_iniFilePath, true);
+		foreach($iniArray as $name=>$data){
+			$reps[] = array('name'=>$name, 'path'=>$data['path'] );
+		}
+
 		foreach($reps as $rep){
 			$repPath = $rep['path'];
 			if(file_exists($repPath)){
