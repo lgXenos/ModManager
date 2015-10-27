@@ -102,6 +102,7 @@ class gitActionModel {
 			$branches = $this->getBranches();
 			$this->appendFetchGitCommand($lastChanges, 'git status -s --no-column', true);
 		}
+		$this->fixFilesPermissionsOnGitRoot();
 
 
 		return array(
@@ -276,6 +277,7 @@ class gitActionModel {
 		!($branchName) ? $ret[] = 'ERROR$ no branchName' : $this->appendFetchGitCommand($ret, 'git checkout ' . $branchName, true);
 		$this->appendFetchGitCommand($ret, 'git status -s --no-column', true);
 		$branches = $this->getBranches();
+		$this->fixFilesPermissionsOnGitRoot();
 
 		return array(
 			'branches' => $branches,
@@ -417,7 +419,7 @@ class gitActionModel {
 	 * 
 	 */
 	public function fixFilesPermissionsOnGitRoot(){
-		myConsole::execCommand('chmod -R g=rwx '.$this->gitDir.'/.*');
+		myConsole::execCommand('chmod -R g=rwx,u=rwx '.$this->gitDir.'/.*');
 	}
 
 }

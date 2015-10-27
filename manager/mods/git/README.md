@@ -47,7 +47,7 @@ root# sudo chmod -R u=rwx,g=rwx,o=r /opt/var/www/.*
 ~$ sudo chown www-data ~www-data/.ssh -R
 ~~~
 
-По идее - все.
+По идее - все. Надо перезагрузится и можно начинать работать.
 ---
 
 
