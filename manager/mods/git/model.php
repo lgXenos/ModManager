@@ -30,7 +30,7 @@ class gitActionModel {
 		
 		$_iniFilePath = myConfig::get('fsPathToMod') . '/reps.ini';
 		if (!file_exists($_iniFilePath)) {
-			exit('Rename <u>/manager/mods/git/reps.ini.sample</u> to *.ini and refresh page.');
+			exit('Copy <u>/manager/mods/git/reps.ini.sample</u> to *.ini and refresh page.');
 		}
 		
 		$iniArray = parse_ini_file($_iniFilePath, true);
