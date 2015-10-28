@@ -31,13 +31,18 @@ class myCore {
 	/**
 	 * парсим INI-файл мода и возвращаем что нашли
 	 * 
-	 * @param type $fullModPath
+	 * @param str/bool $fullModPath - либо читаем у определенного мода, или у активного, если false
+	 * @param str $fileName			- имя файла, который читаем
 	 * @return type
 	 */
-	public static function readModIniFile($fullModPath) {
+	public static function readModIniFile($fullModPath = false, $fileName = 'info') {
 
+		if(!$fullModPath){
+			$fullModPath = myConfig::get('fsPathToMod');
+		}
+		
 		$iniArray = false;
-		$_iniFilePath = $fullModPath . '/info.ini';
+		$_iniFilePath = $fullModPath . '/' . $fileName.'.ini';
 		if (file_exists($_iniFilePath)) {
 			$iniArray = parse_ini_file($_iniFilePath, true);
 		}

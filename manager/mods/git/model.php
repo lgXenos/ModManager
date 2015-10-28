@@ -11,10 +11,12 @@ class gitActionModel {
 	public $currentGitRep = false;
 	// непосредственно путь к текущему репу
 	public $gitDir = '.';
+	// имя все опции из custom.ini, кроме репозиториев
+	private $customOptions = false;
 	
 	// имя куки
 	public $currentGitRepCoockieName = "currentGitRep";
-
+	
 	// hard-coding
 	public function __construct() {
 		$this->initGitReps();
@@ -28,16 +30,18 @@ class gitActionModel {
 	private function initGitReps(){
 		$reps = array ();
 		
-		$_iniFilePath = myConfig::get('fsPathToMod') . '/reps.ini';
-		if (!file_exists($_iniFilePath)) {
-			exit('Copy <u>/manager/mods/git/reps.ini.sample</u> to *.ini and refresh page.');
+		$iniArray = myCore::readModIniFile(false, 'custom');
+		if(!is_array($iniArray) || !isset($iniArray['repositories'])){
+			var_dump($iniArray);
+			exit('Error: copy <u>/manager/mods/git/custom.ini.sample</u> to *.ini and refresh page.');
 		}
 		
-		$iniArray = parse_ini_file($_iniFilePath, true);
-		foreach($iniArray as $name=>$data){
-			$reps[] = array('name'=>$name, 'path'=>$data['path'] );
+		foreach($iniArray['repositories'] as $repData){
+			$reps[] = array('name'=>$repData['name'], 'path'=>$repData['path'] );
 		}
+		unset($iniArray['repositories']);
 
+		// отберем валидные из списка
 		foreach($reps as $rep){
 			$repPath = $rep['path'];
 			if(file_exists($repPath)){
@@ -59,6 +63,7 @@ class gitActionModel {
 		
 		$this->gitDir = $currentRep['path'];
 		$this->currentGitRep = $currentRep;
+		$this->customOptions = $iniArray;
 	}
 
 	/**
@@ -399,12 +404,12 @@ class gitActionModel {
 	}
 
 	/**
-	 * если забыли добавить разделы пользователя и emaila
+	 * - если забыли добавить разделы пользователя и emaila
+	 * - если "наделали" файлов от своего юзера
 	 * 
-	 * @param type $count
 	 * @return boolean
 	 */
-	private function checkGitPHPAvailability($count = 0) {
+	private function checkGitPHPAvailability() {
 		// проверка на доступность 
 		$status = $this->fetchGitCommand('git log -1');
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
@@ -413,6 +418,27 @@ class gitActionModel {
 			myCore::redirectToUrl(myRoute::getRoute('git', 'unavailability'));
 			exit;
 		}
+		
+		// проверка на утраченного владельца
+		if($this->customOptions['check to losted owner']['check'] == '1'){
+			$wrongOwners = $this->customOptions['check to losted owner']['wrong_owners'];
+			$warnings = '';
+			foreach($wrongOwners as $user){
+				$cmd = 'find '.$this->gitDir.' -user ' . $user;
+				$status = $this->fetchGitCommand($cmd);
+				if(count($status)){
+					$warnings .= '<h3>WARNING: found '.count($status).' files from user '.$user.'</h3>';
+				}
+			}
+			/**
+			 * @todo заюзать view мода/ядра
+			 */
+			if($warnings!=''){
+				echo '<div class="gitWarnings">'.$warnings.'</div>';
+				echo '<div class="gitWarnSugest">sudo chown www-data '.$this->gitDir.'/.* -R</div>';
+			}
+		}
+		
 		return true;
 	}
 	
