@@ -149,7 +149,7 @@ class gitActionModel {
 	 */
 	public function makeCommit($text) {
 		$res = array();
-		$this->appendFetchGitCommand($res, 'git commit -am "' . $text . '"', true);
+		$this->appendFetchGitCommand($res, 'git add . && git commit -am "' . $text . '"', true);
 		$this->appendFetchGitCommand($res, 'git status', true);
 		return $res;
 	}
@@ -424,7 +424,7 @@ class gitActionModel {
 			$wrongOwners = $this->customOptions['check to losted owner']['wrong_owners'];
 			$warnings = '';
 			foreach($wrongOwners as $user){
-				$cmd = 'find '.$this->gitDir.' -user ' . $user;
+				echo $cmd = 'find '.$this->gitDir.'/.git -user ' . $user;
 				$status = $this->fetchGitCommand($cmd);
 				if(count($status)){
 					$warnings .= '<h3>WARNING: found '.count($status).' files from user '.$user.'</h3>';
