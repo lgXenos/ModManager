@@ -427,7 +427,7 @@ class gitActionModel {
 				$cmd = 'find '.$this->gitDir.'/.git -user ' . $user;
 				$status = $this->fetchGitCommand($cmd);
 				if(count($status)){
-					$warnings .= '<h3>WARNING: found '.count($status).' files from user '.$user.'</h3>';
+					$warnings .= '<h3 data-cmd="'.$cmd.'">WARNING: found '.count($status).' files from user '.$user.'</h3>';
 				}
 			}
 			/**

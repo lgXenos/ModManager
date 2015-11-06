@@ -20,6 +20,7 @@ class gitActionController {
 
 		if (method_exists($this, $_do)) {
 			ini_set('max_execution_time', '120');
+			set_time_limit(120);
 			$this->$_do();
 		} else {
 			$this->gitV->renderError('undefined ' . $_do);

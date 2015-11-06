@@ -40,7 +40,7 @@ var myModManager = {
 			url: G.moduleUrl,
 			data: data,
 			dataType: "json",
-			timeout: 15000,
+			timeout: 150000,
 			success: function (result) {
 				self._myLoader(0);
 				if (typeof (fn) == 'function')
