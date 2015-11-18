@@ -63,7 +63,7 @@ class gitActionController {
 
 		$params = myRoute::getRequest('params', 'arr', []);
 		$branchName = isset($params['branch_name']) ? $params['branch_name'] : '';
-		
+
 		$res = $this->gitM->checkoutBranch($branchName);
 
 		if (!$res) {
@@ -73,7 +73,6 @@ class gitActionController {
 
 		$this->gitV->renderIndexPage($res);
 	}
-	
 
 	/**
 	 * убиваем удаленную ветку
@@ -82,7 +81,7 @@ class gitActionController {
 
 		$params = myRoute::getRequest('params', 'arr', []);
 		$branchName = isset($params['branch_name']) ? $params['branch_name'] : '';
-		
+
 		$res = $this->gitM->deleteRemote($branchName);
 
 		if (!$res) {
@@ -92,7 +91,7 @@ class gitActionController {
 
 		$this->gitV->renderIndexPage($res);
 	}
-	
+
 	/**
 	 * убиваем удаленную ветку
 	 */
@@ -100,7 +99,7 @@ class gitActionController {
 
 		$params = myRoute::getRequest('params', 'arr', []);
 		$branchName = isset($params['branch_name']) ? $params['branch_name'] : '';
-		
+
 		$res = $this->gitM->deleteLocal($branchName);
 
 		if (!$res) {
@@ -110,7 +109,7 @@ class gitActionController {
 
 		$this->gitV->renderIndexPage($res);
 	}
-	
+
 	/**
 	 * коммит текущего состояния
 	 */
@@ -122,7 +121,7 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant fetch commit result');
 	}
-	
+
 	/**
 	 * смерживаемся с локальной веткой
 	 */
@@ -143,7 +142,7 @@ class gitActionController {
 		$text = myRoute::getRequestParams('text', 'str', 'text');
 
 		$res = $this->gitM->addNewBranch($text);
-		
+
 		if (!$res) {
 			$this->gitV->renderError('no datas recieved');
 			return;
@@ -168,12 +167,12 @@ class gitActionController {
 	public function pull() {
 
 		$branchName = myRoute::getRequest('branch_name', 'str', false);
-		
+
 		$res = $this->gitM->pullOrigin($branchName);
 
 		$this->processStdJson($res, 'cant make pull');
 	}
-	
+
 	/**
 	 * получаем список отложенных сташей
 	 */
@@ -183,7 +182,7 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant get stash list');
 	}
-	
+
 	/**
 	 * откладываем текущие грязные правки
 	 */
@@ -193,7 +192,7 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant do stash save');
 	}
-	
+
 	/**
 	 * применяем и удаляем последние грязные правки
 	 */
@@ -203,7 +202,7 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant do stash pop');
 	}
-	
+
 	/**
 	 * прибиваем все грязные отложенности
 	 */
@@ -213,16 +212,16 @@ class gitActionController {
 
 		$this->processStdJson($res, 'cant do stash clear');
 	}
-	
+
 	/**
 	 * сменить текущий репозиторий и открыть титульную страницу
 	 */
 	public function change_rep() {
 		$repName = myRoute::getRequestParams('rep_name', 'str', false);
 		$this->gitM->changeRepository($repName);
-		header('Location: '.myRoute::getRoute('git'));
+		header('Location: ' . myRoute::getRoute('git'));
 	}
-	
+
 	/**
 	 * сообщение про недоступность системы
 	 */
@@ -232,14 +231,10 @@ class gitActionController {
 		echo 'git config user.email "my@email.here"<br>';
 		echo 'git config user.name "RomanSh"<br>';
 		echo 'or add section user in .git/config<br><br>';
-		echo '<a href="'.myRoute::getRoute('git').'">Click here to try again</a>';
+		echo '<a href="' . myRoute::getRoute('git') . '">Click here to try again</a>';
 		// может выведем немного из лога апача
-		if(file_exists('/var/log/apache2/error.log')){
-			echo '<hr>';
-			echo 'last logs:<textarea style="width:100%;" rows="11">'. 
-					implode("\n", myConsole::execCommand('tail -n 10 /var/log/apache2/error.log;'))
-			.'</textarea>';
-		}
+		echo '<hr>';
+		echo 'last logs:<textarea style="width:100%;" rows="11">' . $this->gitM->readApacheErrorLog() . '</textarea>';
 	}
 
 	/**
@@ -252,13 +247,11 @@ class gitActionController {
 	public function processStdJson($res, $dfltMsg = 'unknown error') {
 		if (!$res) {
 			myOutput::jsonError($dfltMsg);
-		} 
-		elseif(isset($res['error'])){
+		} elseif (isset($res['error'])) {
 			$id = isset($res['error']['id']) ? $res['error']['id'] : -1;
 			$msg = isset($res['error']['message']) ? $res['error']['message'] : $dfltMsg;
 			myOutput::jsonError($msg, $id);
-		} 
-		else {
+		} else {
 			myOutput::jsonSuccess($res);
 		}
 	}

@@ -6,14 +6,73 @@
 class myConsole {
 
 	/**
+	 * читаем последние строчки из файла
+	 * 
+	 * @param string $file		-	файл для чтения последний строчек
+	 * @param int $linesCnt		-	сколько линий "откусывать" с конца
+	 * @return array/false		-	или массив или false, если прочесть не удалось
+	 */
+	public static function readLastXLinesFromFile($file, $linesCnt = 10) {
+
+		// проверим доступность чтения из файла
+		// Переменная \$? содержит статус с которым завершилась последняя команда. 
+		// В нашем случае код отличный от 0 обозначает, что произошла ошибка.
+
+		$cmd = "test -r {$file}; echo $?";
+		$haveErrors = intval(myConsole::execCommand($cmd, true));
+		if ($haveErrors) {
+			return false;
+		}
+
+		// читаем файл
+		$cmd = 'tail -n ' . intval($linesCnt) . ' ' . $file . ';';
+		return myConsole::execCommand($cmd);
+	}
+
+	/**
 	 * получить результат выполнения команды в консоли
 	 * 
 	 * @param type $command
 	 * @return string
 	 */
-	public static function execCommand($command) {
-		return self::fetchExec($command);
+	public static function execCommand($command, $toString = false) {
+		return self::fetchExec($command, $toString);
 	}
+
+	/**
+	 * метод через exec для execCommand
+	 * 
+	 * @param type $command
+	 * @return type
+	 */
+	public static function fetchShellExec($command, $toString = false) {
+
+		$res = shell_exec($command);
+		if (!$toString) {
+			$res = explode("\n", $res);
+		}
+		return $res;
+	}
+
+	/**
+	 * запасные варианты чтения из консоли
+	 */
+
+	/**
+	 * метод через exec для execCommand
+	 * 
+	 * @param type $command
+	 * @return type
+	 */
+	public static function fetchExec($command, $toString = false) {
+		$res = array();
+		exec($command, $res);
+		if ($toString) {
+			$res = implode("\n", $res);
+		}
+		return $res;
+	}
+
 	/**
 	 * метод через system для execCommand
 	 * 
@@ -27,17 +86,7 @@ class myConsole {
 		ob_end_clean();
 		return trim($res);
 	}
-	/**
-	 * метод через exec для execCommand
-	 * 
-	 * @param type $command
-	 * @return type
-	 */
-	public static function fetchExec($command) {
-		$res = array();
-		exec($command, $res);
-		return $res;
-	}
+
 	/**
 	 * метод через popen для execCommand
 	 * 
@@ -46,17 +95,12 @@ class myConsole {
 	 */
 	public static function fetchPOpen($command) {
 		$res = '';
-		$fp=popen($command,"r"); 
-		while (!feof($fp)) { 
+		$fp = popen($command, "r");
+		while (!feof($fp)) {
 			$res .= fgets($fp, 4096);
-		} 
-		pclose($fp); 
+		}
+		pclose($fp);
 		return $res;
 	}
-	
-	
 
 }
-
-
-// $command="asd"; ob_start(); system($command); $res = ob_get_contents(); ob_end_clean(); echo $res;
