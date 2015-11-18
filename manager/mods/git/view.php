@@ -76,6 +76,8 @@ class gitActionView {
 					if (isset($_v[$_f]) AND $_v[$_f] > 1) {
 						$$_f = '<a href="https://redmine.suffra.com/issues/' . $_v[$_f] . '" target="_blank">' . $$_f . '</a>';
 					}
+					$modI = $_f . '_i';
+					$$modI = $$_f == '' ? '' : $_i;
 				}
 
 
@@ -86,13 +88,13 @@ class gitActionView {
 				$html .= '
 					<tr>
 						<td>
-							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="local" data-name="' . $_i . '">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="local" data-name="' . $local_i . '">+</a> 
 								|
 							' . $local . '
 						</td>
 						<td>&nbsp;</td>
 						<td>
-							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="remote" data-name="' . $_i . '">+</a> 
+							<a class="button showOnHover isRelative withPopup js_showBranchActionsPopup" href="#" data-type="remote" data-name="' . $remote_i . '">+</a> 
 								|
 							' . $remote . '
 						</td>

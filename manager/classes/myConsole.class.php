@@ -36,7 +36,7 @@ class myConsole {
 	 * @return string
 	 */
 	public static function execCommand($command, $toString = false) {
-		return self::fetchExec($command, $toString);
+		return self::fetchShellExec($command, $toString);
 	}
 
 	/**
@@ -47,10 +47,24 @@ class myConsole {
 	 */
 	public static function fetchShellExec($command, $toString = false) {
 
-		$res = shell_exec($command);
-		if (!$toString) {
+		$res = rtrim(shell_exec($command));
+		if (!$res) {
+			$res = '';
+		}
+		// по умолчанию у нас строчка. 
+		if ($toString) {
+			return $res;
+		}
+		// если хотели массив - перегоняем: по сути - делаем вывод такой же, как в обычном exec
+		// если пустая строка - пустой массив
+		if ($res == '') {
+			$res = array();
+		}
+		// иначе - полноценный массив
+		else {
 			$res = explode("\n", $res);
 		}
+		
 		return $res;
 	}
 
@@ -70,6 +84,7 @@ class myConsole {
 		if ($toString) {
 			$res = implode("\n", $res);
 		}
+		myDebug::iout($command, 'TO:: ', $res);
 		return $res;
 	}
 
