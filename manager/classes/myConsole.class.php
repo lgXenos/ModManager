@@ -36,86 +36,128 @@ class myConsole {
 	 * @return string
 	 */
 	public static function execCommand($command, $toString = false) {
-		return self::fetchShellExec($command, $toString);
+		
+		return self::fetchProcOpen($command, $toString);
 	}
 
 	/**
 	 * метод через exec для execCommand
 	 * 
+	 * НЕ ЖЕЛАТЕЛЬНО КОПИРОВАТЬ для боевых серверов из-за временных файлов
+	 * 
 	 * @param type $command
 	 * @return type
 	 */
-	public static function fetchShellExec($command, $toString = false) {
+	public static function fetchProcOpen($command, $toString = false)
+	{
+		$outfile = tempnam("", "cmd");
+		$errfile = tempnam("", "cmd");
+		$descriptorspec = array(
+			0 => array("pipe", "r"),
+			1 => array("file", $outfile, "w"),
+			2 => array("file", $errfile, "w")
+		);
+		$proc = proc_open($command, $descriptorspec, $pipes);
 
-		$res = rtrim(shell_exec($command));
-		if (!$res) {
-			$res = '';
-		}
-		// по умолчанию у нас строчка. 
-		if ($toString) {
-			return $res;
-		}
-		// если хотели массив - перегоняем: по сути - делаем вывод такой же, как в обычном exec
-		// если пустая строка - пустой массив
-		if ($res == '') {
-			$res = array();
-		}
-		// иначе - полноценный массив
-		else {
-			$res = explode("\n", $res);
+		if (!is_resource($proc)) return 255;
+
+		fclose($pipes[0]);    //Don't really want to give any input
+
+		$exitCode = proc_close($proc);
+		$stdout = file($outfile);
+		$stderr = file($errfile);
+
+		unlink($outfile);
+		unlink($errfile);
+		
+		$res = myTools::arraysUnionWithoutIndex($stdout, $stderr);
+		
+		if($toString){
+			$res = implode("\n", $res);
 		}
 		
 		return $res;
 	}
+	
+}
+
+
 
 	/**
 	 * запасные варианты чтения из консоли
 	 */
 
-	/**
-	 * метод через exec для execCommand
-	 * 
-	 * @param type $command
-	 * @return type
-	 */
-	public static function fetchExec($command, $toString = false) {
-		$res = array();
-		exec($command, $res);
-		if ($toString) {
-			$res = implode("\n", $res);
-		}
-		myDebug::iout($command, 'TO:: ', $res);
-		return $res;
-	}
-
-	/**
-	 * метод через system для execCommand
-	 * 
-	 * @param type $command
-	 * @return type
-	 */
-	public static function fetchSystem($command) {
-		ob_start();
-		system($command);
-		$res = ob_get_contents();
-		ob_end_clean();
-		return trim($res);
-	}
-
-	/**
-	 * метод через popen для execCommand
-	 * 
-	 * @param type $command
-	 * @return type
-	 */
-	public static function fetchPOpen($command) {
-		$res = '';
-		$fp = popen($command, "r");
-		while (!feof($fp)) {
-			$res .= fgets($fp, 4096);
-		}
-		pclose($fp);
-		return $res;
-	}
-
-}
+//	/**
+//	 * метод через exec для execCommand
+//	 * 
+//	 * @param type $command
+//	 * @return type
+//	 */
+//	public static function fetchShellExec($command, $toString = false) {
+//
+//		$res = rtrim(shell_exec($command));
+//		if (!$res) {
+//			$res = '';
+//		}
+//		// по умолчанию у нас строчка. 
+//		if ($toString) {
+//			return $res;
+//		}
+//		// если хотели массив - перегоняем: по сути - делаем вывод такой же, как в обычном exec
+//		// если пустая строка - пустой массив
+//		if ($res == '') {
+//			$res = array();
+//		}
+//		// иначе - полноценный массив
+//		else {
+//			$res = explode("\n", $res);
+//		}
+//		
+//		return $res;
+//	}
+//		
+//	/**
+//	 * метод через exec для execCommand
+//	 * 
+//	 * @param type $command
+//	 * @return type
+//	 */
+//	public static function fetchExec($command, $toString = false) {
+//		$res = array();
+//		exec($command, $res);
+//		if ($toString) {
+//			$res = implode("\n", $res);
+//		}
+//		myDebug::iout($command, 'TO:: ', $res);
+//		return $res;
+//	}
+//
+//	/**
+//	 * метод через system для execCommand
+//	 * 
+//	 * @param type $command
+//	 * @return type
+//	 */
+//	public static function fetchSystem($command) {
+//		ob_start();
+//		system($command);
+//		$res = ob_get_contents();
+//		ob_end_clean();
+//		return trim($res);
+//	}
+//
+//	/**
+//	 * метод через popen для execCommand
+//	 * 
+//	 * @param type $command
+//	 * @return type
+//	 */
+//	public static function fetchPOpen($command) {
+//		$res = '';
+//		$fp = popen($command, "r");
+//		while (!feof($fp)) {
+//			$res .= fgets($fp, 4096);
+//		}
+//		pclose($fp);
+//		return $res;
+//	}

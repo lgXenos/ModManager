@@ -71,7 +71,7 @@ class gitActionModel {
 	 * @return type
 	 */
 	public function getIndexData() {
-
+		
 		$this->checkGitPHPAvailability();
 
 		$branches = $this->getBranches();
