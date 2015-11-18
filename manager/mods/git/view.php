@@ -129,7 +129,7 @@ class gitActionView {
 			$status = '
 			' . $repsHtml . '
 			<div class="spacer">
-				<div class="scrollerXY" style="height:170px;">
+				<div class="scrollerXY" style="height:220px;">
 					<div class="asConsole js_myConsole">
 						' . $_s . '
 					</div>

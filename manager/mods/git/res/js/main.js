@@ -4,7 +4,7 @@ var myGitMod = {
 	// где консолька
 	tplConsole: $('.js_myConsole'),
 	// ее размер
-	tplConsoleHeight: 170,
+	tplConsoleHeight: 220,
 	//
 	// инициализируем "приложение"
 	init: function () {
