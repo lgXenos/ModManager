@@ -528,12 +528,11 @@ class gitActionModel {
 	 */
 	public function readApacheErrorLog($linesCnt = 10) {
 
-		// по умолчанию - это файл из конфига
-		$fileName = $this->customOptions['etc']['apacheLogPath'];
+		$fileName = '/var/log/apache2/error.log';
 		
 		$fileContent = 
-				'Error! File '.$fileName.' is not readable!'
-				. ' Try set read(r) and execute(x) permissions for parent folder.';
+				'Notice: file '.$fileName.' is not readable!'
+				. ' You may set read(r) and execute(x) permissions for parent folder.';
 
 		$result = myConsole::readLastXLinesFromFile($fileName, $linesCnt);
 		
