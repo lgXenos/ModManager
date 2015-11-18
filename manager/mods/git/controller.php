@@ -29,8 +29,6 @@ class gitActionController {
 
 	/**
 	 * получение и выдача на экран главной страницы
-	 * 
-	 * @return type
 	 */
 	public function getIndexPage() {
 
@@ -46,8 +44,6 @@ class gitActionController {
 
 	/**
 	 * обновляет ремоутные ветки и чистит удаленные
-	 * 
-	 * @return type
 	 */
 	public function update_remotes() {
 		$res = $this->gitM->getUpdateRemotesStatus();
@@ -62,8 +58,6 @@ class gitActionController {
 
 	/**
 	 * спуливаемся с веткой
-	 * 
-	 * @return type
 	 */
 	public function checkout() {
 
@@ -83,8 +77,6 @@ class gitActionController {
 
 	/**
 	 * убиваем удаленную ветку
-	 * 
-	 * @return type
 	 */
 	public function delete_remote() {
 
@@ -103,8 +95,6 @@ class gitActionController {
 	
 	/**
 	 * убиваем удаленную ветку
-	 * 
-	 * @return type
 	 */
 	public function delete_local() {
 
@@ -123,8 +113,6 @@ class gitActionController {
 	
 	/**
 	 * коммит текущего состояния
-	 * 
-	 * @return type
 	 */
 	public function commit() {
 
@@ -136,9 +124,7 @@ class gitActionController {
 	}
 	
 	/**
-	 * коммит текущего состояния
-	 * 
-	 * @return type
+	 * смерживаемся с локальной веткой
 	 */
 	public function merge_local() {
 
@@ -151,8 +137,6 @@ class gitActionController {
 
 	/**
 	 * создание нового бранча
-	 * 
-	 * @return type
 	 */
 	public function add_branch() {
 
@@ -170,8 +154,6 @@ class gitActionController {
 
 	/**
 	 * пушим сами себя в себя
-	 * 
-	 * @return type
 	 */
 	public function push_self() {
 
@@ -181,9 +163,7 @@ class gitActionController {
 	}
 
 	/**
-	 * спуливаемся с веткой
-	 * 
-	 * @return type
+	 * спуливаемся с удаленной веткой
 	 */
 	public function pull() {
 
@@ -192,6 +172,46 @@ class gitActionController {
 		$res = $this->gitM->pullOrigin($branchName);
 
 		$this->processStdJson($res, 'cant make pull');
+	}
+	
+	/**
+	 * получаем список отложенных сташей
+	 */
+	public function stash_list() {
+
+		$res = $this->gitM->getStashList();
+
+		$this->processStdJson($res, 'cant get stash list');
+	}
+	
+	/**
+	 * откладываем текущие грязные правки
+	 */
+	public function stash_save() {
+
+		$res = $this->gitM->getStashSave();
+
+		$this->processStdJson($res, 'cant do stash save');
+	}
+	
+	/**
+	 * применяем и удаляем последние грязные правки
+	 */
+	public function stash_pop() {
+
+		$res = $this->gitM->getStashPop();
+
+		$this->processStdJson($res, 'cant do stash pop');
+	}
+	
+	/**
+	 * прибиваем все грязные отложенности
+	 */
+	public function stash_clear() {
+
+		$res = $this->gitM->getStashClear();
+
+		$this->processStdJson($res, 'cant do stash clear');
 	}
 	
 	/**

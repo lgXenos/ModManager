@@ -45,7 +45,7 @@ class gitActionView {
 			else {
 				$repsHtml .= '
 					<div class="block">
-						repository:
+						current repository is
 					<select name="rep" class="js_repsChng">';
 				foreach ($res['reps'] as $currRep) {
 					$name = $currRep['name'];
@@ -104,8 +104,17 @@ class gitActionView {
 			if ($current) {
 				$currentHtml = '
 					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
-					<a class="button js_git_push" href="#" title="сделать push origin {ветка}">push</a> |
+					<a class="button js_git_push" href="#" title="сделать pull origin {ветка}, потом push">pull&push</a> |
 					<a class="button js_git_add_branch" href="#" title="сделать checkout -b {имя_ветки}">+</a> |
+					<a class="button withPopup isRelative" href="#">
+						<ul class="popupMenu bigPopupMenu">
+							<li class="js_magicButton" data-method="stash_save" data-name="-" title="сохранить черновую работу">save</li>
+							<li class="js_magicButton" data-method="stash_pop" data-name="-" title="наложить последнюю отложенную">pop</li>
+							<li class="js_magicButton" data-method="stash_list" data-name="-" title="просмотреть есть ли что отложенное">list</li>
+							<li class="js_magicButton" data-method="stash_clear" data-name="-" title="стереть все отложенное">clear</li>
+						</ul>
+						stash
+					</a> |
 					on branch: <strong>' . $current . '</strong>
 				';
 			}

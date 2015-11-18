@@ -34,7 +34,6 @@ var myGitMod = {
 			res.success = errMsg;
 		}
 
-		//var tpl = $('<div>');
 		var tpl = self.tplConsole;
 
 		var currDate = new Date;
@@ -153,7 +152,7 @@ var myGitMod = {
 				self.__getNodeFromParams({
 					tag: 'a',
 					coverTag: 'li',
-					html: 'checkout ' + branchName,
+					html: 'checkout ' ,
 					attr: {href: myModManager.getJSRoute('checkout', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}
 				})
@@ -165,7 +164,7 @@ var myGitMod = {
 					tag: 'a',
 					coverTag: 'li',
 					class: 'js_promptBefore',
-					html: 'branch -D[elete] ' + branchName,
+					html: 'branch -D[elete] ' ,
 					attr: {href: myModManager.getJSRoute('delete_local', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}
 				})
@@ -190,7 +189,7 @@ var myGitMod = {
 				self.__getNodeFromParams({
 					tag: 'li',
 					class: 'js_magicButton',
-					html: 'pull origin ' + branchName,
+					html: 'pull origin ' ,
 					data: {method: 'pull', name: branchName}
 				})
 				);
@@ -201,7 +200,7 @@ var myGitMod = {
 					tag: 'a',
 					class: 'js_show_loading js_promptBefore',
 					coverTag: 'li',
-					html: '[delete] ' + branchName,
+					html: '[delete] push origin :...' ,
 					attr: {href: myModManager.getJSRoute('delete_remote', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}})
 				);

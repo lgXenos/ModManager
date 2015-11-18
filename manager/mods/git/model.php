@@ -77,6 +77,7 @@ class gitActionModel {
 
 		$branches = $this->getBranches();
 		$lastChanges = $this->getStatus();
+		$this->appendFetchGitCommand($lastChanges, 'git stash list');
 
 		return array(
 			'branches' => $branches,
@@ -166,8 +167,21 @@ class gitActionModel {
 		if (!is_string($current)) {
 			return false;
 		}
-		$this->appendFetchGitCommand($res, 'git push origin ' . $current, true);
-		$this->appendFetchGitCommand($res, 'git log origin/' . $current . "   --format='%ai' -1", true);
+		// проверим, чтоб все было комиченным
+		$currStatus = $this->fetchGitCommand('git status -s');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			$res[] = 'ERROR$ You must commit your changes first';
+		}
+		else {
+			$this->appendFetchGitCommand($res, 'git pull origin ' . $current, true);
+			$this->appendFetchGitCommand($res, 'git push origin ' . $current, true);
+			$this->appendFetchGitCommand($res, 'git log origin/' . $current . "   --format='%ai' -1", true);
+			$this->fixFilesPermissionsOnGitRoot();
+			/**
+			 * @todo обновить список бранчей
+			 * $this->getBranches(true);
+			 */
+		}
 		return $res;
 	}
 
@@ -274,6 +288,64 @@ class gitActionModel {
 		
 		$this->fixFilesPermissionsOnGitRoot();
 
+		return $ret;
+	}
+
+	/**
+	 * получаем список отложенных сташей
+	 */
+	public function getStashList() {
+		
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git stash list', true);
+
+		return $ret;
+	}
+	
+	/**
+	 * откладываем текущие грязные правки
+	 */
+	public function getStashSave() {
+		
+		// проверим, чтоб был лишь 1 отложенный
+		$currStatus = $this->fetchGitCommand('git stash list');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			return myCore::returnErrorArray('More than 1 active stash not supported. Apply them or clear, Than try again.');
+		}
+		
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git stash save', true);
+		$this->appendFetchGitCommand($ret, 'git stash list', true);
+		$this->fixFilesPermissionsOnGitRoot();
+		
+		return $ret;
+	}
+	
+	/**
+	 * применяем и удаляем последние грязные правки
+	 */
+	public function getStashPop() {
+		
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git stash pop', true);
+		$this->appendFetchGitCommand($ret, 'git stash list', true);
+		$this->appendFetchGitCommand($ret, 'git status -s', true);
+		$this->fixFilesPermissionsOnGitRoot();
+		
+		return $ret;
+	}
+
+	/**
+	 * прибиваем все грязные отложенности
+	 */
+	public function getStashClear() {
+		
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git stash clear', true);
+		$this->appendFetchGitCommand($ret, 'git log -1', true);
+		$this->appendFetchGitCommand($ret, 'git status -s', true);
+		$this->fixFilesPermissionsOnGitRoot();
+		
 		return $ret;
 	}
 

@@ -3,6 +3,9 @@
 .mainTable td{
 	border-bottom:1px solid #D8D4D4;
 }
+.mainTable td:hover{
+	background: #FFF5E2;
+}
 .mainTable td .button{
 	padding: 0px 4px;
 }
@@ -38,13 +41,19 @@
     font-size: 14px;
     background-color: #526AD6;
     padding: 6px 30px;
-    left: 19px;
+    left: -2px;
     border-radius: 3px;
     border: 1px solid #777;
     display: none;
     list-style: none;
     padding-left: 5px;
-    top: -19px;
+    top: 3px;
+}
+.bigPopupMenu{
+	font-size: 21px;
+    left: -11px;
+    top: 21px;
+    padding-left: 18px;
 }
 .withPopup:hover .popupMenu{
 	display: block;
