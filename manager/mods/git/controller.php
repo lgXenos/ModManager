@@ -22,7 +22,8 @@ class gitActionController {
 			ini_set('max_execution_time', '120');
 			set_time_limit(120);
 			$this->$_do();
-		} else {
+		}
+		else {
 			$this->gitV->renderError('undefined ' . $_do);
 		}
 	}
@@ -223,6 +224,14 @@ class gitActionController {
 	}
 
 	/**
+	 * проверить, чтоб на всех файлах не было лишних владельцев
+	 */
+	public function chk_chown() {
+		$res = $this->gitM->checkErrorsOwners();
+		$this->processStdJson($res, 'cant chk_owner');
+	}
+
+	/**
 	 * сообщение про недоступность системы
 	 */
 	public function unavailability() {
@@ -247,11 +256,13 @@ class gitActionController {
 	public function processStdJson($res, $dfltMsg = 'unknown error') {
 		if (!$res) {
 			myOutput::jsonError($dfltMsg);
-		} elseif (isset($res['error'])) {
+		}
+		elseif (isset($res['error'])) {
 			$id = isset($res['error']['id']) ? $res['error']['id'] : -1;
 			$msg = isset($res['error']['message']) ? $res['error']['message'] : $dfltMsg;
 			myOutput::jsonError($msg, $id);
-		} else {
+		}
+		else {
 			myOutput::jsonSuccess($res);
 		}
 	}

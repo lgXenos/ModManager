@@ -71,7 +71,7 @@ class gitActionModel {
 	 * @return type
 	 */
 	public function getIndexData() {
-		
+
 		$this->checkGitPHPAvailability();
 
 		$branches = $this->getBranches();
@@ -106,7 +106,8 @@ class gitActionModel {
 		// проверим, чтоб такого бранча не было
 		elseif (isset($branches[$branchName]) AND isset($branches[$branchName]['local'])) {
 			$lastChanges[] = 'ERROR$ A branch named "' . $branchName . '" already exists.';
-		} else {
+		}
+		else {
 			$this->appendFetchGitCommand($lastChanges, 'git checkout -b ' . $branchName, true);
 			$branches = $this->getBranches();
 			$this->appendFetchGitCommand($lastChanges, 'git status -s --no-column', true);
@@ -169,7 +170,8 @@ class gitActionModel {
 		$currStatus = $this->fetchGitCommand('git status -s');
 		if (!is_array($currStatus) || count($currStatus) > 0) {
 			$res[] = 'ERROR$ You must commit your changes first';
-		} else {
+		}
+		else {
 			$this->appendFetchGitCommand($res, 'git pull origin ' . $current, true);
 			$this->appendFetchGitCommand($res, 'git push origin ' . $current, true);
 			$this->appendFetchGitCommand($res, 'git log origin/' . $current . "   --format='%ai' -1", true);
@@ -394,12 +396,15 @@ class gitActionModel {
 		// проверим, чтоб бранч был, и мы не были в нем
 		if (isset($branches[$branchName]) AND ! isset($branches[$branchName]['current'])) {
 			$this->appendFetchGitCommand($ret, 'git branch -D ' . $branchName, true);
-		} else {
+		}
+		else {
 			if (!$branchName) {
 				$ret[] = 'ERROR$ no branchName';
-			} elseif (!isset($branches[$branchName])) {
+			}
+			elseif (!isset($branches[$branchName])) {
 				$ret[] = 'ERROR$ branch is not exists';
-			} elseif (isset($branches[$branchName]['current'])) {
+			}
+			elseif (isset($branches[$branchName]['current'])) {
 				$ret[] = 'ERROR$ branch is current';
 			}
 		}
@@ -442,7 +447,8 @@ class gitActionModel {
 		if (is_string($res)) {
 			if ($res != '') {
 				$res = explode("\n", $res);
-			} else {
+			}
+			else {
 				$res = array();
 			}
 		}
@@ -475,7 +481,7 @@ class gitActionModel {
 	 * 
 	 * @return boolean
 	 */
-	private function checkGitPHPAvailability() {
+	private function checkGitPHPAvailability($path = '/.git', $isAjax = false) {
 		// проверка на доступность 
 		$status = $this->fetchGitCommand('git log -1');
 		// если ничего не получили - значит некий сбой. может - нет данных о себе
@@ -490,7 +496,7 @@ class gitActionModel {
 			$wrongOwners = $this->customOptions['check to losted owner']['wrong_owners'];
 			$warnings = '';
 			foreach ($wrongOwners as $user) {
-				$cmd = 'find ' . $this->gitDir . '/.git -user ' . $user;
+				$cmd = 'find ' . $this->gitDir . $path . ' -user ' . $user . ' ';
 				$status = $this->fetchGitCommand($cmd);
 				if (count($status)) {
 					$warnings .= '<h3 data-cmd="' . $cmd . '">WARNING: found ' . count($status) . ' files from user ' . $user . '</h3>';
@@ -500,12 +506,34 @@ class gitActionModel {
 			 * @todo заюзать view мода/ядра
 			 */
 			if ($warnings != '') {
-				echo '<div class="gitWarnings">' . $warnings . '</div>';
-				echo '<div class="gitWarnSugest">sudo chown www-data ' . $this->gitDir . '/.* -R</div>';
+				$warnings = '<div class="gitWarnings">' . $warnings . '</div>' .
+						'<div class="gitWarnSugest">sudo chown www-data ' . $this->gitDir . '/.* -R</div>';
+				if ($isAjax) {
+					$warnings = str_replace('</', "\n</", $warnings);
+					$warnings = $cmd . "\n" . strip_tags($warnings);
+					return explode("\n", $warnings);
+				}
+				else {
+					echo $warnings;
+				}
 			}
 		}
 
 		return true;
+	}
+
+	/**
+	 * проверить, чтоб на всех файлах не было лишних владельцев
+	 */
+	public function checkErrorsOwners() {
+		$res = $this->checkGitPHPAvailability('/', true);
+		if ($res === true) {
+			$res = array(
+				'find ' . $this->gitDir . '/ -user [fake_user] : Ok'
+			);
+		}
+
+		return $res;
 	}
 
 	/**
@@ -529,17 +557,16 @@ class gitActionModel {
 	public function readApacheErrorLog($linesCnt = 10) {
 
 		$fileName = '/var/log/apache2/error.log';
-		
-		$fileContent = 
-				'Notice: file '.$fileName.' is not readable!'
+
+		$fileContent = 'Notice: file ' . $fileName . ' is not readable!'
 				. ' You may set read(r) and execute(x) permissions for parent folder.';
 
 		$result = myConsole::readLastXLinesFromFile($fileName, $linesCnt);
-		
-		if(is_array($result)){
+
+		if (is_array($result)) {
 			$fileContent = implode("\n", $result);
 		}
-		
+
 		return $fileContent;
 	}
 

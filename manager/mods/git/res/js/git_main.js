@@ -1,4 +1,4 @@
-/* global G */
+/* global G, myModManager */
 
 var myGitMod = {
 	// где консолька
@@ -21,6 +21,12 @@ var myGitMod = {
 	// добавляем в "консоль" инфу
 	_appendConsoleAnswer: function (res) {
 		var self = this;
+		var tpl = self.tplConsole;
+
+		if (!res) {
+			tpl.html('');
+			return;
+		}
 
 		if (!res.success) {
 			var errMsg = 'unknow error';
@@ -34,10 +40,8 @@ var myGitMod = {
 			res.success = errMsg;
 		}
 
-		var tpl = self.tplConsole;
-
 		var currDate = new Date;
-		currDate = '<b>' + currDate.toString() + '</b><br>'
+		currDate = '<b>' + currDate.toString() + '</b><br>';
 		tpl.append('<p class="hr"></p>').append(currDate);
 
 		for (var _t in res.success) {
@@ -76,20 +80,24 @@ var myGitMod = {
 	_addPopupActionMenu: function (that, isRepeated) {
 		// 
 		var self = this;
+
+		var branchName = that.attr('data-name');
+		if (branchName == '') {
+			return;
+		}
+
+		var branchType = that.attr('data-type');
 		var popupClass = 'popupMenu';
 		var menuBlock = that.find('.' + popupClass);
 		if (!menuBlock.length) {
 			that.append($('<ul>', {class: popupClass}));
 		}
 		setTimeout(function () {
-			a = that;
 			menuBlock = that.find('.' + popupClass);
 			// не перезаписываем менюшки
 			if (menuBlock.html()) {
 				return;
 			}
-			var branchType = that.attr('data-type');
-			var branchName = that.attr('data-name');
 			switch (branchType) {
 				case'local':
 				{
@@ -152,7 +160,7 @@ var myGitMod = {
 				self.__getNodeFromParams({
 					tag: 'a',
 					coverTag: 'li',
-					html: 'checkout ' ,
+					html: 'checkout ',
 					attr: {href: myModManager.getJSRoute('checkout', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}
 				})
@@ -164,7 +172,7 @@ var myGitMod = {
 					tag: 'a',
 					coverTag: 'li',
 					class: 'js_promptBefore',
-					html: 'branch -D[elete] ' ,
+					html: 'branch -D[elete] ',
 					attr: {href: myModManager.getJSRoute('delete_local', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}
 				})
@@ -183,24 +191,24 @@ var myGitMod = {
 	// набьем пунктов в меню remote-ветки
 	_appendRemoteActionsToPopup: function (menuBlock, branchName) {
 		var self = this;
-		
+
 		// git pull origin {...}
 		menuBlock.append(
 				self.__getNodeFromParams({
 					tag: 'li',
 					class: 'js_magicButton',
-					html: 'pull origin ' ,
+					html: 'pull origin ',
 					data: {method: 'pull', name: branchName}
 				})
 				);
-		
+
 		// git push origin :{...}
 		menuBlock.append(
 				self.__getNodeFromParams({
 					tag: 'a',
 					class: 'js_show_loading js_promptBefore',
 					coverTag: 'li',
-					html: '[delete] push origin :...' ,
+					html: '[delete] push origin :...',
 					attr: {href: myModManager.getJSRoute('delete_remote', {branch_name: branchName})},
 					data: {method: 'checkout', name: branchName}})
 				);
@@ -227,21 +235,17 @@ var myGitMod = {
 						var fn = function (res) {
 							self._appendConsoleAnswer(res);
 						};
-						window.location = myModManager.getJSRoute('add_branch',{text: ansv});
+						window.location = myModManager.getJSRoute('add_branch', {text: ansv});
 					}
-					return false;
-				})
-				// кнопка пуш текущей ветки
-				.on("click", ".js_git_push", function () {
-					var fn = function (res) {
-						self._appendConsoleAnswer(res);
-					};
-					myModManager.aj({_do: 'push_self'}, fn);
 					return false;
 				})
 				// долгие операции имеют класс псевдо-загрузки
 				.on("click", ".js_show_loading", function () {
 					myModManager._myLoader(1);
+				})
+				// с пасхой
+				.on("dblclick", ".etcMenuButton", function () {
+					self._appendConsoleAnswer();
 				})
 				// обработка "волшебных" кнопок попапов
 				.on("click", ".js_magicButton", function () {
@@ -266,11 +270,11 @@ var myGitMod = {
 					var that = $(this);
 					var url = myModManager.getJSRoute('change_rep', {rep_name: that.val()});
 					window.location = url;
-				})
+				});
 
-	},
+	}
 };
 
 $(document).ready(function () {
 	myGitMod.init();
-})
+});

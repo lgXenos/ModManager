@@ -105,18 +105,21 @@ class gitActionView {
 			$currentHtml = '<i>cant parse name of current branch :(</i>';
 			if ($current) {
 				$currentHtml = '
-					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
-					<a class="button js_git_push" href="#" title="сделать pull origin {ветка}, потом push">pull&push</a> |
-					<a class="button js_git_add_branch" href="#" title="сделать checkout -b {имя_ветки}">+</a> |
-					<a class="button withPopup isRelative" href="#">
+					<a class="button withPopup isRelative etcMenuButton" href="#">
 						<ul class="popupMenu bigPopupMenu">
-							<li class="js_magicButton" data-method="stash_save" data-name="-" title="сохранить черновую работу">save</li>
-							<li class="js_magicButton" data-method="stash_pop" data-name="-" title="наложить последнюю отложенную">pop</li>
-							<li class="js_magicButton" data-method="stash_list" data-name="-" title="просмотреть есть ли что отложенное">list</li>
-							<li class="js_magicButton" data-method="stash_clear" data-name="-" title="стереть все отложенное">clear</li>
+							<li class="js_magicButton" data-method="stash_save" data-name="-" title="сохранить черновую работу">stash save</li>
+							<li class="js_magicButton" data-method="stash_pop" data-name="-" title="наложить последнюю отложенную">stash pop</li>
+							<li class="js_magicButton" data-method="stash_list" data-name="-" title="просмотреть есть ли что отложенное">stash list</li>
+							<li class="js_magicButton" data-method="stash_clear" data-name="-" title="стереть все отложенное">stash clear</li>
+							<li class="menuDelimeter">&nbsp;</li>
+							<li class="js_git_add_branch" title="сделать checkout -b {имя_ветки}">new branch</li>
+							<li class="menuDelimeter">&nbsp;</li>
+							<li class="js_magicButton" data-method="chk_chown" data-name="-" title="проверить владельца на всех файлах"> <i>chk_chown</i> </li>
 						</ul>
-						stash
 					</a> |
+					<a class="button js_git_commit" href="#" title="сделать commit -am {коммент}">commit</a> |
+					<a class="button js_magicButton" data-method="push_self" data-name="' . $current . '" href="#" title="сделать pull origin {ветка}, потом push">pull&push</a> |
+					<!-- a class="button js_git_add_branch" href="#" title="сделать checkout -b {имя_ветки}">new</a> | -->
 					on branch: <strong>' . $current . '</strong>
 				';
 			}
@@ -156,8 +159,8 @@ class gitActionView {
 			';
 		}
 
-		myOutput::addCSS('main.css');
-		myOutput::addJS('main.js');
+		myOutput::addCSS('git_main.css');
+		myOutput::addJS('git_main.js');
 		myOutput::outFullHtml($html, 'MyGit / RomanSh');
 	}
 
