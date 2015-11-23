@@ -22,7 +22,7 @@ name = RomanSh
 ---
 
 ~~~
-Выполняем:
+Выполняем (вместо nano можно mcedit / vi / и чего хочется еще):
 ~$ nano /etc/apache2/envvars
 
 Меняем юзера:

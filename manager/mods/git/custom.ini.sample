@@ -1,19 +1,24 @@
+; если апач работает от www-data, то указать от чьего имени могут меняться файлы 
+; обычно слетает, если идет merge\checkout от своего юзера минуя PHP-оболочку
 ;
-; список доступных репозиториев (от корня File System)
+[check to losted owner]
+check = 0					; 1 - проверять, 0 - нет
+wrong_owners[] = prog5		; "ошибочные" пользователи
+wrong_owners[] = root
+
+; список доступных репозиториев. 
 ; будут использоваться лишь существующие
 ;
-; [repository_name]
-; path = 'path_to_rep'
-; ...
+[repositories]
+;
+mys_work[name]= mys work
+mys_work[path]= /home/prog5/RomanSh/modManager
+;
+mys_home[name] = mys home
+mys_home[path] = /var/www/mys
+;
+admin[name] = admin
+admin[path] = /opt/var/www/admin
 
-[instant]
-path = '/opt/var/www/instant'
-
-[mys work]
-path = '/home/prog5/RomanSh/modManager'
-
-[mys home]
-path = '/var/www/mys'
-
-[admin]
-path = '/opt/var/www/admin'
+; разные прочие настройки
+[etc]
