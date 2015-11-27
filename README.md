@@ -1,4 +1,4 @@
-# ModManager
+# RVS_ModManager
 Все началось с желания создать GUI для GIT на PHP, да еще и в браузере.
 
 ~~~

@@ -20,15 +20,6 @@ class myCore {
 	}
 
 	/**
-	 * список необходимых файлов для корректной работы с модом
-	 * 
-	 * @return type 
-	 */
-	public static function getRequiredListComponentsForMod() {
-		return array('controller.php', 'model.php', 'view.php');
-	}
-
-	/**
 	 * парсим INI-файл мода и возвращаем что нашли
 	 * 
 	 * @param str/bool $fullModPath - либо читаем у определенного мода, или у активного, если false
@@ -48,26 +39,6 @@ class myCore {
 		}
 
 		return $iniArray;
-	}
-
-	/**
-	 * валидация аддона тем, что есть минимально необходимые файлы
-	 * 
-	 * @param type $fullModPath
-	 * @return boolean
-	 */
-	public static function validateMod($fullModPath) {
-
-		$isValid = true;
-		foreach (self::getRequiredListComponentsForMod() as $component) {
-			$checkingFile = $fullModPath . '/' . $component;
-			if (!file_exists($checkingFile)) {
-				$isValid = false;
-				break;
-			}
-		}
-
-		return $isValid;
 	}
 
 	/**
@@ -173,6 +144,41 @@ class myCore {
 				'message' => $message,
 			)
 		);
+	}
+	
+	
+	/*
+	 *	private zone
+	 */
+
+	
+	/**
+	 * список необходимых файлов для корректной работы с модом
+	 * 
+	 * @return type 
+	 */
+	private static function getRequiredListComponentsForMod() {
+		return array('controller.php', 'model.php', 'view.php');
+	}
+
+	/**
+	 * валидация аддона тем, что есть минимально необходимые файлы
+	 * 
+	 * @param type $fullModPath
+	 * @return boolean
+	 */
+	private static function validateMod($fullModPath) {
+
+		$isValid = true;
+		foreach (self::getRequiredListComponentsForMod() as $component) {
+			$checkingFile = $fullModPath . '/' . $component;
+			if (!file_exists($checkingFile)) {
+				$isValid = false;
+				break;
+			}
+		}
+
+		return $isValid;
 	}
 
 	private function __construct() {
