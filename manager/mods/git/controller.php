@@ -230,6 +230,14 @@ class gitActionController {
 		$res = $this->gitM->checkErrorsOwners();
 		$this->processStdJson($res, 'cant chk_owner');
 	}
+	
+	/**
+	 * посмотреть последние коммиты
+	 */
+	public function git_log() {
+		$res = $this->gitM->gitLog();
+		$this->processStdJson($res, 'cant get log');
+	}
 
 	/**
 	 * сообщение про недоступность системы

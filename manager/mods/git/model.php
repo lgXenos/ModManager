@@ -535,6 +535,15 @@ class gitActionModel {
 
 		return $res;
 	}
+	
+	/**
+	 * вывести последние логи
+	 */
+	public function gitLog() {
+		$ret = array();
+		$this->appendFetchGitCommand($ret, 'git log -3', true);
+		return $ret;
+	}
 
 	/**
 	 *  возникла проблема, что после пула-мержа пермишены становятся как

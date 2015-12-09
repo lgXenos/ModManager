@@ -81,8 +81,9 @@ class gitActionView {
 				}
 
 
-				if (!$current) {
-					$current = isset($_v['current']) ? $_i : false;
+				if (!$current && isset($_v['current'])){
+					$current = $_i;
+					$local = '<span class="currentBranch">'.$local.'<span>';
 				}
 
 				$html .= '
@@ -107,12 +108,14 @@ class gitActionView {
 				$currentHtml = '
 					<a class="button withPopup isRelative etcMenuButton" href="#">
 						<ul class="popupMenu bigPopupMenu">
+							<li class="js_git_add_branch" title="сделать checkout -b {имя_ветки}">new branch</li>
+							<li class="menuDelimeter">&nbsp;</li>
+							<li class="js_magicButton" data-method="git_log" data-name="-" title="посмотреть последние коммиты">git log</li>
+							<li class="menuDelimeter">&nbsp;</li>
 							<li class="js_magicButton" data-method="stash_save" data-name="-" title="сохранить черновую работу">stash save</li>
 							<li class="js_magicButton" data-method="stash_pop" data-name="-" title="наложить последнюю отложенную">stash pop</li>
 							<li class="js_magicButton" data-method="stash_list" data-name="-" title="просмотреть есть ли что отложенное">stash list</li>
 							<li class="js_magicButton" data-method="stash_clear" data-name="-" title="стереть все отложенное">stash clear</li>
-							<li class="menuDelimeter">&nbsp;</li>
-							<li class="js_git_add_branch" title="сделать checkout -b {имя_ветки}">new branch</li>
 							<li class="menuDelimeter">&nbsp;</li>
 							<li class="js_magicButton" data-method="chk_chown" data-name="-" title="проверить владельца на всех файлах"> <i>chk_chown</i> </li>
 						</ul>

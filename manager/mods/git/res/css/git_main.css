@@ -100,3 +100,7 @@
     padding-right: 36px;
     padding-left: 0px;
 }
+.currentBranch{
+	font-weight: bold;
+	color: #44438A;
+}
