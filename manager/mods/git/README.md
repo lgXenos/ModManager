@@ -23,11 +23,14 @@ name = RomanSh
 
 ~~~
 Выполняем (вместо nano можно mcedit / vi / и чего хочется еще):
-~$ nano /etc/apache2/envvars
+~$ sudo nano /etc/apache2/envvars
 
 Меняем юзера:
 export APACHE_RUN_USER=roman
 export APACHE_RUN_GROUP=roman
+
+Перезапускаем апач
+~$ sudo service apache2 restart
 ~~~
 
 2. Очень геморный: поколдовать с правами на файлы и папки сайта. Которые потом будут вечно слетать при любой операции в ручную или обычном добавлении файла

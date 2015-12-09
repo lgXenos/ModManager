@@ -2,7 +2,7 @@
 
 var myModManager = {
 	// показывает-скрывает окошко с визуальностью прогрузки
-	_myLoader: function (operation, isRepeated) {
+	_myLoader: function (operation, isRepeated, event) {
 		var self = this;
 		var loader = $('.js_myLoader');
 
@@ -20,7 +20,7 @@ var myModManager = {
 		// координаты крутилки
 		var e = event || {};
 		var posX = e.pageX || 20;
-		var posY = e.pageX || 20;
+		var posY = e.pageY || 20;
 		var myCss = {left: posX, top: posY};
 
 		// исполнение
