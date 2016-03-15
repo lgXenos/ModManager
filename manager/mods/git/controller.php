@@ -5,7 +5,15 @@
  */
 class gitActionController {
 
+	/**
+	 *
+	 * @var gitActionView
+	 */
 	public $gitV = false;
+	/**
+	 *
+	 * @var gitActionModel
+	 */
 	public $gitM = false;
 
 	/**
@@ -238,7 +246,7 @@ class gitActionController {
 		$res = $this->gitM->gitLog();
 		$this->processStdJson($res, 'cant get log');
 	}
-
+	
 	/**
 	 * сообщение про недоступность системы
 	 */
@@ -274,5 +282,28 @@ class gitActionController {
 			myOutput::jsonSuccess($res);
 		}
 	}
+	
+	//
+	//	собственные наработки под конкретные нужды
+	//
+	
+	/**
+	 * взять пользовательскую задачу на проверку
+	 */
+	public function get_user_feature() {
+		$featureName = myRoute::getRequest('feature_name', 'str', false);
+		$featureName = trim($featureName);
+		$res = $this->gitM->getUserFeature($featureName);
+		$this->processStdJson($res, 'cant get user feature');
+	}
+	/**
+	 * взять пользовательскую задачу на проверку
+	 */
+	public function accept_user_feature() {
+		$res = $this->gitM->acceptUserFeature();
+		$this->processStdJson($res, 'cant get user feature');
+	}
+
+
 
 }

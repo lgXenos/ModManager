@@ -535,7 +535,7 @@ class gitActionModel {
 
 		return $res;
 	}
-	
+
 	/**
 	 * вывести последние логи
 	 */
@@ -577,6 +577,77 @@ class gitActionModel {
 		}
 
 		return $fileContent;
+	}
+
+	//
+	//	собственные наработки под конкретные нужды
+
+	//
+	
+	/**
+	 * взять коды задачи в локалку без коммита
+	 * 
+	 * @param string $featureName
+	 */
+	public function getUserFeature($featureName) {
+		
+		$res = array();
+		
+		// проверим, чтоб все было комиченным
+		$currStatus = $this->fetchGitCommand('git status -s');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			return ['ERROR$ You must commit your changes first'];
+		}
+
+		$branches = $this->getBranches();
+		$this->checkoutBranch('develop');
+		// удалим локальный, если он есть 
+		if (isset($branches[$featureName]) AND isset($branches[$featureName]['local'])) {
+			$this->deleteLocal($featureName);
+		}
+		// проверим, чтоб был такой удаленный
+		if (!isset($branches[$featureName]) || !isset($branches[$featureName]['remote'])) {
+			return ['ERROR$ unknown branch "'.$featureName.'"'];
+		}
+		
+		$this->appendFetchGitCommand($res, 'git remote update', true);
+		//$this->appendFetchGitCommand($res, 'git checkout develop', true);
+		$this->appendFetchGitCommand($res, 'git pull origin develop', true);
+		$this->appendFetchGitCommand($res, 'git checkout -b ' . $featureName, true);
+		$this->appendFetchGitCommand($res, 'git pull --no-commit origin ' . $featureName , true);
+		
+		return $res;
+	}
+
+	/**
+	 * принять задачу и перелить ее в девелоп. коммиты делает IDE / консоль
+	 * 
+	 * @return boolean
+	 */
+	public function acceptUserFeature() {
+
+		$res = array();
+		
+		// проверим, чтоб все было комиченным
+		$currStatus = $this->fetchGitCommand('git status -s');
+		if (!is_array($currStatus) || count($currStatus) > 0) {
+			return ['ERROR$ You must commit your changes first'];
+		}
+		// перепроверим наличие текущего
+		$current = $this->getBranches(true);
+		if (!is_string($current)) {
+			return ['ERROR$ current branch unknown'];
+		}
+
+		$this->checkoutBranch('develop');
+		$this->appendFetchGitCommand($res, 'git remote prune origin', true);
+		$this->appendFetchGitCommand($res, 'git merge --commit ' . $current, true);
+		$this->appendFetchGitCommand($res, 'git pull origin develop', true);
+		$this->appendFetchGitCommand($res, 'git push origin develop', true);
+		$this->deleteLocal($current);
+		//$this->deleteRemote($current);
+		
+		return $res;
 	}
 
 }

@@ -45,6 +45,8 @@ class gitActionView {
 			else {
 				$repsHtml .= '
 					<div class="block">
+						<a class="button js_getUserFeature" href="#" title="">Взять фичу</a>
+						<a class="button js_acceptUserFeature" href="#" title="">Принять задачу</a>
 						current repository is
 					<select name="rep" class="js_repsChng">';
 				foreach ($res['reps'] as $currRep) {

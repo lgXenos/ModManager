@@ -270,6 +270,24 @@ var myGitMod = {
 					var that = $(this);
 					var url = myModManager.getJSRoute('change_rep', {rep_name: that.val()});
 					window.location = url;
+				})
+				// берем пользовательскую задачу к себе в локалку
+				.on("click", ".js_getUserFeature", function () {
+					var ansv = prompt("Input feature name:");
+					if (ansv) {
+						var fn = function (res) {
+							self._appendConsoleAnswer(res);
+						};
+						myModManager.aj({_do: 'get_user_feature', feature_name: ansv}, fn);
+					}
+					return false;
+				})
+				// переливаем текущую задачу в девелоп
+				.on("click", ".js_acceptUserFeature", function () {
+					var fn = function (res) {
+						self._appendConsoleAnswer(res);
+					};
+					myModManager.aj({_do: 'accept_user_feature'}, fn);
 				});
 
 	}
