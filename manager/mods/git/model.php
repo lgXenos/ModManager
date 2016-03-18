@@ -605,16 +605,18 @@ class gitActionModel {
 		if (isset($branches[$featureName]) AND isset($branches[$featureName]['local'])) {
 			$this->deleteLocal($featureName);
 		}
+		
+		$this->appendFetchGitCommand($res, 'git remote update', true);
+		$branches = $this->getBranches();
 		// проверим, чтоб был такой удаленный
 		if (!isset($branches[$featureName]) || !isset($branches[$featureName]['remote'])) {
 			return ['ERROR$ unknown branch "'.$featureName.'"'];
 		}
 		
-		$this->appendFetchGitCommand($res, 'git remote update', true);
 		//$this->appendFetchGitCommand($res, 'git checkout develop', true);
 		$this->appendFetchGitCommand($res, 'git pull origin develop', true);
 		$this->appendFetchGitCommand($res, 'git checkout -b ' . $featureName, true);
-		$this->appendFetchGitCommand($res, 'git pull --no-commit origin ' . $featureName , true);
+		$this->appendFetchGitCommand($res, 'git pull --no-commit --no-ff origin ' . $featureName , true);
 		
 		return $res;
 	}
@@ -640,12 +642,12 @@ class gitActionModel {
 		}
 
 		$this->checkoutBranch('develop');
-		$this->appendFetchGitCommand($res, 'git remote prune origin', true);
 		$this->appendFetchGitCommand($res, 'git merge --commit ' . $current, true);
 		$this->appendFetchGitCommand($res, 'git pull origin develop', true);
 		$this->appendFetchGitCommand($res, 'git push origin develop', true);
 		$this->deleteLocal($current);
-		//$this->deleteRemote($current);
+		$this->deleteRemote($current);
+		$this->appendFetchGitCommand($res, 'git remote prune origin', true);
 		
 		return $res;
 	}
