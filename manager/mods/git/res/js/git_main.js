@@ -273,7 +273,7 @@ var myGitMod = {
 				})
 				// берем пользовательскую задачу к себе в локалку
 				.on("click", ".js_getUserFeature", function () {
-					var ansv = prompt("Input feature name:", '1244_css');
+					var ansv = prompt("Input feature name:", '1319_css');
 					if (ansv) {
 						var fn = function (res) {
 							self._appendConsoleAnswer(res);

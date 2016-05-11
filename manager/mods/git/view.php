@@ -75,8 +75,9 @@ class gitActionView {
 				$indexArr = array('local', 'remote');
 				foreach ($indexArr as $_f) {
 					$$_f = isset($_v[$_f]) ? $_i : '';
+					$$_f = '<input type="text" readonly value="' . $$_f . '">';
 					if (isset($_v[$_f]) AND $_v[$_f] > 1) {
-						$$_f = '<a href="https://redmine.suffra.com/issues/' . $_v[$_f] . '" target="_blank">' . $$_f . '</a>';
+						$$_f .= ' <a href="https://redmine.suffra.com/issues/' . $_v[$_f] . '" target="_blank"> redmine&rarr;</a>';
 					}
 					$modI = $_f . '_i';
 					$$modI = $$_f == '' ? '' : $_i;
