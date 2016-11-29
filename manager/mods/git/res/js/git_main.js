@@ -287,7 +287,10 @@ var myGitMod = {
 					var fn = function (res) {
 						self._appendConsoleAnswer(res);
 					};
-					myModManager.aj({_do: 'accept_user_feature'}, fn);
+					if(confirm("Переливаем эту ветку в DEVELOP?")) {
+						myModManager.aj({_do: 'accept_user_feature'}, fn);
+					}
+					return false;
 				});
 
 	}

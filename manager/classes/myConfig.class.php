@@ -7,8 +7,11 @@ class myConfig {
 
 	/**
 	 * singleton
-	 * 
-	 * @return class instance
+	 *
+	 * @param $fullPath
+	 *
+	 * @return myConfig
+	 * @throws Exception
 	 */
 	public static function getInstance($fullPath) {
 		if (!(self::$instance instanceof self)) {
@@ -16,16 +19,17 @@ class myConfig {
 			if (!file_exists($fullPath)) {
 				throw new Exception('"fullPath" is not valid');
 			}
-			self::$cfg = array('fullPath' => $fullPath);
+			self::$cfg = ['fullPath' => $fullPath];
 		}
 
 		return self::$instance;
 	}
 
 	/**
-	 * 
-	 * @param str/arr $cfg		- или строка или массив значений
-	 * @param type $val
+	 *
+	 * @param       str /arr $cfg        - или строка или массив значений
+	 * @param mixed $val
+	 *
 	 * @return boolean
 	 * @throws Exception
 	 */
@@ -34,7 +38,7 @@ class myConfig {
 		self::checkForValidCfg();
 
 		if (!is_array($cfg)) {
-			$cfg = array($cfg => $val);
+			$cfg = [$cfg => $val];
 		}
 
 		foreach ($cfg as $name => $value) {
@@ -47,17 +51,19 @@ class myConfig {
 
 	/**
 	 * получить переменную конфигурации
-	 * 
+	 *
 	 * изначально доступны <br>
 	 * * modManagerName <br>
 	 * * fullPath - файловый путь к менеджеру<br>
 	 * * webPath - урл к менеджеру<br>
 	 * * modsPath - путь к папке модулей<br>
 	 * * fsPathToMod - появится, если подключен мод
-	 * 
-	 * @param type $name
+	 *
+	 * @param string $name
+	 *
+	 * @return null
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	public static function get($name) {
 
@@ -65,15 +71,16 @@ class myConfig {
 
 		if (isset(self::$cfg[$name])) {
 			return self::$cfg[$name];
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	/**
 	 * получить весь конфиг
-	 * 
-	 * @return arr
+	 *
+	 * @return array
 	 */
 	public static function getAllConfig() {
 
@@ -90,15 +97,15 @@ class myConfig {
 	}
 
 	private function __construct() {
-		
+
 	}
 
 	private function __clone() {
-		
+
 	}
 
 	private function __wakeup() {
-		
+
 	}
 
 }

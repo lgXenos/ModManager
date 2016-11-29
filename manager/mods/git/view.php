@@ -83,6 +83,10 @@ class gitActionView {
 					$$modI = $$_f == '' ? '' : $_i;
 				}
 
+				/** @var $local string */
+				/** @var $remote string */
+				/** @var $local_i string */
+				/** @var $remote_i string */
 
 				if (!$current && isset($_v['current'])){
 					$current = $_i;
